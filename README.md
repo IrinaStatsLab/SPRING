@@ -19,12 +19,7 @@ Data](https://www.frontiersin.org/articles/10.3389/fgene.2019.00516/full).
 *Frontiers in Genetics*, 10:516.
 
 The faster version of latent correlation computation part is now fully
-available and implemented to the R package `SPRING`. The corresponding
-reference is available on arXiv:
-
-Yoon G., Müller C.L. and Gaynanova I. [Fast computation of latent
-correlations](https://arxiv.org/abs/2006.13875). *arXiv*.
-
+available and implemented to the R package `SPRING`. 
 ## Installation
 
 ``` r

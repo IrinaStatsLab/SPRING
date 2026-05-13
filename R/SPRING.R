@@ -13,7 +13,7 @@
 #' @param thresh threshold for StARS selection criterion. 0.1 is recommended (default). The smaller threshold returns sparser graph.
 #' @param subsample.ratio 0.8 is default. The recommended values are 10*sqrt(n)/n for n > 144 or 0.8 otherwise.
 #' @param rep.num the repetition number of subsampling for StARS eddge stability selection. The default value is 20.
-#' @param Rtol Desired accuracy when calculating the solution of bridge function in estimateR function.
+#' @param Rtol Desired accuracy when calculating the solution of bridge function in latentcor function.
 #' @param verbose If \code{verbose = FALSE}, tracing information printing for HUGE (High-dimensional Undirected Graph Estimation) with a specified method (currently "mb" is only available) is disabled. The default value is TRUE.
 #' @param verboseR If \code{verboseR = FALSE}, printing information whetehr nearPD is used or not when calculating rank-based correlation matrices is disabled. The defalut value is FALSE.
 #' @param Rmethod The calculation method of latent correlation. Either "original" method or "approx". If \code{Rmethod = "original"}, multilinear approximation method is used, which is much faster than the original method. If \code{Rmethod = "original"}, optimization of the bridge inverse function is used. The default is "approx".
@@ -40,7 +40,7 @@
 #' }
 #' @importFrom huge huge.mb
 #' @importFrom pulsar pulsar
-#' @importFrom mixedCCA estimateR
+#' @importFrom latentcor latentcor
 #'
 #' @export
 #'
@@ -71,7 +71,7 @@ SPRING <- function(data, quantitative = FALSE, method = "mb", lambda.min.ratio =
 
   if(is.character(lambdaseq)){
     if(lambdaseq == "data-specific"){
-      Kcor <- mixedCCA::estimateR(qdat, type = "trunc", method = Rmethod, tol = Rtol, verbose = verboseR)$R
+      Kcor <- latentcor::latentcor(qdat, types = "trunc", method = Rmethod, tol = Rtol)$R
       # generate lambda sequence
       lambda.max <- max(max(Kcor-diag(p)), -min(Kcor-diag(p)))
       lambda.min <- lambda.min.ratio * lambda.max

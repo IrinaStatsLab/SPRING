@@ -26,7 +26,7 @@ hugeKmb(
 
 \item{sym}{"or" is the symmetrizing rule of the output graphs. If sym = "and", the edge between node i and node j is selected ONLY when both node i and node j are selected as neighbors for each other. If sym = "or", the edge is selected when either node i or node j is selected as the neighbor for each other. The default value is "or". (refer to huge manual)}
 
-\item{verbose}{If \code{verbose = FALSE}, tracing information printing for HUGE (High-dimensional Undirected Graph Estimation) with a specified method (currently "mb" is only available) is disabled. The default value is TRUE.}
+\item{verbose}{If \code{verbose = FALSE}, tracing information printing for HUGE (High-dimensional Undirected Graph Estimation) is disabled. The default value is TRUE.}
 
 \item{Rmethod}{The calculation method of latent correlation. Either "approx" or "original". If \code{Rmethod = "approx"}, multilinear approximation method is used, which is much faster than the original method. If \code{Rmethod = "original"}, optimization of the bridge inverse function is used. The default is "approx".}
 
@@ -37,11 +37,15 @@ hugeKmb(
 \item{ratio}{When \code{Rmethod = "approx"}, specifies the boundary value for multilinear interpolation, must be between 0 and 1. The default (recommended) value is 0.9. Ignored when \code{Rmethod = "original"}.}
 }
 \value{
-\code{hugeKmb} returns a data.frame containing
+\code{hugeKmb} returns a list containing
 \itemize{
-     \item{beta: }
-     \item{path: }{a list of}
-     \item{df: }
+     \item{beta: }{a list of length \code{nlambda}, each element is a sparse p by p matrix of MB coefficient estimates at the corresponding lambda value.}
+     \item{path: }{a list of length \code{nlambda}, each element is a sparse p by p adjacency matrix of selected edges (symmetrized) at the corresponding lambda value.}
+     \item{df: }{a vector of length \code{nlambda * p} giving the number of selected neighbors for each node at each lambda value.}
+     \item{sparsity: }{a vector of length \code{nlambda} giving the proportion of selected edges at each lambda value.}
+     \item{lambda: }{the lambda sequence used.}
+     \item{cov.input: }{logical, whether the input was identified as a covariance matrix.}
+     \item{scr: }{logical, whether screening was applied.}
 }
 }
 \description{

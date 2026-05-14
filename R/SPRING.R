@@ -14,7 +14,7 @@
 #' @param subsample.ratio 0.8 is default. The recommended values are 10*sqrt(n)/n for n > 144 or 0.8 otherwise.
 #' @param rep.num the repetition number of subsampling for StARS edge stability selection. The default value is 20.
 #' @param Rtol Desired accuracy when calculating the solution of bridge function in latentcor. Default is 1e-6.
-#' @param verbose If \code{verbose = FALSE}, tracing information printing for HUGE (High-dimensional Undirected Graph Estimation) with a specified method (currently "mb" is only available) is disabled. The default value is TRUE.
+#' @param verbose If \code{verbose = FALSE}, tracing information printing for HUGE (High-dimensional Undirected Graph Estimation) is disabled. The default value is TRUE.
 #' @param Rmethod The calculation method of latent correlation. Either \code{"approx"} or \code{"original"}. If \code{Rmethod = "approx"}, multilinear approximation method is used, which is much faster than the original method. If \code{Rmethod = "original"}, optimization of the bridge inverse function is used. The default is \code{"approx"}.
 #' @param use.nearPD Logical indicator. \code{use.nearPD = TRUE} gets nearest positive definite matrix for the estimated latent correlation matrix with shrinkage adjustment by \code{nu}. Output \code{R} is the same as \code{Rpointwise} if \code{use.nearPD = FALSE}. Default value is \code{TRUE}.
 #' @param nu Shrinkage parameter for the correlation matrix, must be between 0 and 1. Guarantees that the minimal eigenvalue of the returned correlation matrix is greater or equal to \code{nu}. The default (recommended) value is 0.001.
@@ -31,7 +31,7 @@
 #'               }
 #'       \item{fit: }{Output results of \code{pulsar::refit} function. It contains:}
 #'       \itemize{
-#'               \item{est: } a data frame containing
+#'               \item{est: } a list containing
 #'               \itemize{
 #'                        \item{beta: } Estimates of beta coefficient matrices (of size p by p) by "mb" method on the whole data at each of whole lambda sequence value.
 #'                        \item{path: } Estimates of precision matrix (of size p by p) on the whole data at each of whole lambda sequence value.

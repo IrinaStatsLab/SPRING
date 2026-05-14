@@ -7,7 +7,7 @@
 SPRING(
   data,
   quantitative = FALSE,
-  method = "mb",
+  method = c("mb"),
   lambda.min.ratio = 0.01,
   nlambda = 20,
   lambdaseq = exp(seq(log(0.6), log(0.6 * lambda.min.ratio), length.out = nlambda)),
@@ -18,7 +18,10 @@ SPRING(
   rep.num = 20,
   Rtol = 1e-06,
   verbose = TRUE,
-  Rmethod = "approx"
+  Rmethod = "approx",
+  use.nearPD = TRUE,
+  nu = 0.001,
+  ratio = 0.9
 )
 }
 \arguments{
@@ -26,11 +29,11 @@ SPRING(
 
 \item{quantitative}{default is FALSE, which means input "data" is compositional data, which will be normalized using mclr transformation within a function. If TRUE, it means "quantitative" counts are input and no normalization will be applied.}
 
-\item{method}{graph estimation methods. Currently, only "mb" method is available.}
+\item{method}{graph estimation method. Currently only \code{"mb"} (Meinshausen-Bühlmann neighborhood selection) is available.}
 
-\item{lambda.min.ratio}{default is 0.01}
+\item{lambda.min.ratio}{ratio of the smallest to largest value in the lambda sequence. Default is 0.01.}
 
-\item{nlambda}{default is 20.}
+\item{nlambda}{number of lambda values in the regularization sequence. Default is 20.}
 
 \item{lambdaseq}{a sequence of decreasing positive numbers to control the regularization. The default sequence has 20 values generated to be equally spaced on a logarithmic scale from 0.6 to 0.006. Users can specify a sequence to override the default sequence. If user specify as "data-specific", then the lambda sequence will be generated using estimated rank-based correlation matrix from data.}
 
@@ -42,16 +45,22 @@ SPRING(
 
 \item{subsample.ratio}{0.8 is default. The recommended values are 10*sqrt(n)/n for n > 144 or 0.8 otherwise.}
 
-\item{rep.num}{the repetition number of subsampling for StARS eddge stability selection. The default value is 20.}
+\item{rep.num}{the repetition number of subsampling for StARS edge stability selection. The default value is 20.}
 
-\item{Rtol}{Desired accuracy when calculating the solution of bridge function in latentcor function.}
+\item{Rtol}{Desired accuracy when calculating the solution of bridge function in latentcor. Default is 1e-6.}
 
-\item{verbose}{If \code{verbose = FALSE}, tracing information printing for HUGE (High-dimensional Undirected Graph Estimation) with a specified method (currently "mb" is only available) is disabled. The default value is TRUE.}
+\item{verbose}{If \code{verbose = FALSE}, tracing information printing for HUGE (High-dimensional Undirected Graph Estimation) is disabled. The default value is TRUE.}
 
-\item{Rmethod}{The calculation method of latent correlation. Either "approx" or "original". If \code{Rmethod = "approx"}, multilinear approximation method is used, which is much faster than the original method. If \code{Rmethod = "original"}, optimization of the bridge inverse function is used. The default is "approx".}
+\item{Rmethod}{The calculation method of latent correlation. Either \code{"approx"} or \code{"original"}. If \code{Rmethod = "approx"}, multilinear approximation method is used, which is much faster than the original method. If \code{Rmethod = "original"}, optimization of the bridge inverse function is used. The default is \code{"approx"}.}
+
+\item{use.nearPD}{Logical indicator. \code{use.nearPD = TRUE} gets nearest positive definite matrix for the estimated latent correlation matrix with shrinkage adjustment by \code{nu}. Output \code{R} is the same as \code{Rpointwise} if \code{use.nearPD = FALSE}. Default value is \code{TRUE}.}
+
+\item{nu}{Shrinkage parameter for the correlation matrix, must be between 0 and 1. Guarantees that the minimal eigenvalue of the returned correlation matrix is greater or equal to \code{nu}. The default (recommended) value is 0.001.}
+
+\item{ratio}{When \code{Rmethod = "approx"}, specifies the boundary value for multilinear interpolation, must be between 0 and 1. The default (recommended) value is 0.9. Ignored when \code{Rmethod = "original"}.}
 }
 \value{
-\code{SPRING} returns a data.frame containing
+\code{SPRING} returns a list containing
 \itemize{
       \item{output: }{Output results of \code{pulsar::pulsar} based on StARS criterion. It contains:}
               \itemize{
@@ -62,7 +71,7 @@ SPRING(
               }
       \item{fit: }{Output results of \code{pulsar::refit} function. It contains:}
       \itemize{
-              \item{est: } a data frame containing
+              \item{est: } a list containing
               \itemize{
                        \item{beta: } Estimates of beta coefficient matrices (of size p by p) by "mb" method on the whole data at each of whole lambda sequence value.
                        \item{path: } Estimates of precision matrix (of size p by p) on the whole data at each of whole lambda sequence value.

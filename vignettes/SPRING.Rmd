@@ -1,0 +1,118 @@
+---
+title: "SPRING: Semi-Parametric Rank-Based Microbial Network Estimation"
+author:
+  - name: Grace Yoon
+  - name: Irina Gaynanova
+  - name: Christian Mueller
+date: "`r Sys.Date()`"
+output: BiocStyle::html_document
+vignette: >
+  %\VignetteIndexEntry{SPRING: Semi-Parametric Rank-Based Microbial Network Estimation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Introduction
+
+SPRING (Semi-Parametric Rank-based approach for INference in Graphical models)
+estimates sparse microbial association networks from microbiome count data. The
+method is designed to handle the key challenges of microbiome data: excess zeros
+and compositionality.
+
+The main steps are:
+
+1. Optionally normalize compositional data using the modified centered log-ratio
+   (mclr) transformation.
+2. Estimate a rank-based latent correlation matrix via a truncated Gaussian
+   copula model using `latentcor`.
+3. Fit a sparse graphical model using Meinshausen-Buehlmann (MB) neighborhood
+   selection across a regularization path.
+4. Select the optimal sparsity level via StARS (Stability Approach to
+   Regularization Selection) subsampling.
+
+For full methodological details see Yoon, Gaynanova and Mueller (2019)
+*Frontiers in Genetics* 10:516.
+[doi:10.3389/fgene.2019.00516](https://doi.org/10.3389/fgene.2019.00516)
+
+# Installation
+
+```{r install, eval=FALSE}
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("SPRING")
+```
+
+# Example data
+
+The package includes `QMP`, a quantitative microbiome profiling dataset from
+Vandeputte et al. (2017) with 106 subjects and 91 genera, used as the primary
+benchmark in the original paper.
+
+```{r data}
+library(SPRING)
+data(QMP)
+dim(QMP)
+```
+
+# Running SPRING
+
+## Quantitative count data
+
+When absolute counts are available (`quantitative = TRUE`), no normalization is
+applied. We use a short lambda sequence and few subsamples here for speed; the
+paper uses `nlambda = 50` and `rep.num = 50`.
+
+```{r spring-quantitative}
+set.seed(10010)
+fit <- SPRING(QMP, quantitative = TRUE, nlambda = 15, rep.num = 20,
+              seed = 10010, verbose = FALSE)
+```
+
+## Compositional (relative abundance) data
+
+When only relative abundances are available (`quantitative = FALSE`, the
+default), SPRING first applies the mclr transformation internally.
+
+```{r spring-compositional, eval=FALSE}
+RMP <- QMP / rowSums(QMP)
+fit_comp <- SPRING(RMP, quantitative = FALSE, nlambda = 15, rep.num = 20,
+                   seed = 10010, verbose = FALSE)
+```
+
+## Data-specific lambda sequence
+
+Setting `lambdaseq = "data-specific"` generates a lambda sequence scaled to the
+estimated correlation structure of the data, which can improve edge recovery.
+
+```{r spring-dataspecific, eval=FALSE}
+fit_ds <- SPRING(QMP, quantitative = TRUE, lambdaseq = "data-specific",
+                 nlambda = 15, rep.num = 20, seed = 10010, verbose = FALSE)
+```
+
+# Extracting the network
+
+The optimal regularization index selected by StARS and the corresponding
+adjacency matrix:
+
+```{r network}
+opt.index <- fit$output$stars$opt.index
+cat("Optimal lambda index:", opt.index, "\n")
+cat("Optimal lambda:", fit$lambdaseq[opt.index], "\n")
+
+# Adjacency matrix at optimal lambda
+adj <- as.matrix(fit$fit$refit$stars)
+cat("Number of edges:", sum(adj) / 2, "\n")
+```
+
+# Session information
+
+```{r session}
+sessionInfo()
+```

@@ -7,12 +7,14 @@
 hugeKmb(
   data,
   lambda,
-  type = "trunc",
+  type = "tru",
   sym = "or",
   verbose = TRUE,
-  verboseR = TRUE,
-  Rmethod = "approx",
-  tol = 1e-06
+  Rmethod = c("approx", "original"),
+  tol = 1e-06,
+  use.nearPD = TRUE,
+  nu = 0.001,
+  ratio = 0.9
 )
 }
 \arguments{
@@ -20,17 +22,21 @@ hugeKmb(
 
 \item{lambda}{a vector of lambda values}
 
-\item{type}{a type of variables. "trunc" is default.}
+\item{type}{a type of variables passed to \code{latentcor}. "tru" (truncated) is default. See \code{latentcor::latentcor} for valid values ("con", "bin", "tru", "ter").}
 
 \item{sym}{"or" is the symmetrizing rule of the output graphs. If sym = "and", the edge between node i and node j is selected ONLY when both node i and node j are selected as neighbors for each other. If sym = "or", the edge is selected when either node i or node j is selected as the neighbor for each other. The default value is "or". (refer to huge manual)}
 
 \item{verbose}{If \code{verbose = FALSE}, tracing information printing for HUGE (High-dimensional Undirected Graph Estimation) with a specified method (currently "mb" is only available) is disabled. The default value is TRUE.}
 
-\item{verboseR}{If \code{verboseR = FALSE}, printing information whetehr nearPD is used or not is disabled. The defalut value is TRUE.}
+\item{Rmethod}{The calculation method of latent correlation. Either "approx" or "original". If \code{Rmethod = "approx"}, multilinear approximation method is used, which is much faster than the original method. If \code{Rmethod = "original"}, optimization of the bridge inverse function is used. The default is "approx".}
 
-\item{Rmethod}{The calculation method of latent correlation. Either "original" method or "approx". If \code{Rmethod = "approx"}, multilinear approximation method is used, which is much faster than the original method. If \code{Rmethod = "original"}, optimization of the bridge inverse function is used. The default is "approx".}
+\item{tol}{When \code{method = "original"}, specifies the desired accuracy of the bridge function inversion via uniroot optimization and is passed to \code{\link{optimize}}. The default value is 1e-8. When \code{method = "approx"}, this parameter is ignored.}
 
-\item{tol}{Desired accuracy when calculating the solution of bridge function in estimateR function.}
+\item{use.nearPD}{Logical indicator. \code{use.nearPD = TRUE} gets nearest positive definite matrix for the estimated latent correlation matrix with shrinkage adjustment by \code{nu}. Output \code{R} is the same as \code{Rpointwise} if \code{use.nearPD = FALSE}. Default value is \code{TRUE}.}
+
+\item{nu}{Shrinkage parameter for the correlation matrix, must be between 0 and 1. Guarantees that the minimal eigenvalue of returned correlation matrix is greater or equal to \code{nu}. When \code{nu = 0}, no shrinkage is performed, the returned correlation matrix will be semi-positive definite but not necessarily strictly positive definite. When \code{nu = 1}, the identity matrix is returned (not recommended).  The default (recommended) value is 0.001.}
+
+\item{ratio}{When \code{method = "approx"}, specifies the boundary value for multilinear interpolation, must be between 0 and 1. When \code{ratio = 0}, no linear interpolation is performed (the slowest execution) which is equivalent to \code{method = "original"}. When \code{ratio = 1}, linear interpolation is always performed (the fastest execution) but may lead to high approximation errors. The default (recommended) value is 0.9 which controls the approximation error and has fast execution, see Yoon et al. (2021) for details. When \code{method = "original"}, this parameter is ignored.}
 }
 \value{
 \code{hugeKmb} returns a data.frame containing

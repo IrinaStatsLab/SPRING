@@ -17,7 +17,9 @@
 #' @param sym "or" is the symmetrizing rule of the output graphs. If sym = "and", the edge between node i and node j is selected ONLY when both node i and node j are selected as neighbors for each other. If sym = "or", the edge is selected when either node i or node j is selected as the neighbor for each other. The default value is "or". (refer to huge manual)
 #' @param verbose If \code{verbose = FALSE}, tracing information printing for HUGE (High-dimensional Undirected Graph Estimation) with a specified method (currently "mb" is only available) is disabled. The default value is TRUE.
 #' @param Rmethod The calculation method of latent correlation. Either "approx" or "original". If \code{Rmethod = "approx"}, multilinear approximation method is used, which is much faster than the original method. If \code{Rmethod = "original"}, optimization of the bridge inverse function is used. The default is "approx".
-#' @inheritParams latentcor::latentcor
+#' @param use.nearPD Logical indicator. \code{use.nearPD = TRUE} gets nearest positive definite matrix for the estimated latent correlation matrix with shrinkage adjustment by \code{nu}. Output \code{R} is the same as \code{Rpointwise} if \code{use.nearPD = FALSE}. Default value is \code{TRUE}.
+#' @param nu Shrinkage parameter for the correlation matrix, must be between 0 and 1. Guarantees that the minimal eigenvalue of the returned correlation matrix is greater or equal to \code{nu}. The default (recommended) value is 0.001.
+#' @param ratio When \code{Rmethod = "approx"}, specifies the boundary value for multilinear interpolation, must be between 0 and 1. The default (recommended) value is 0.9. Ignored when \code{Rmethod = "original"}.
 #'
 #' @return \code{hugeKmb} returns a data.frame containing
 #' \itemize{

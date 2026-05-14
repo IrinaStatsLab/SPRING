@@ -16,9 +16,8 @@
 #' @param type a type of variables passed to \code{latentcor}. "tru" (truncated) is default. See \code{latentcor::latentcor} for valid values ("con", "bin", "tru", "ter").
 #' @param sym "or" is the symmetrizing rule of the output graphs. If sym = "and", the edge between node i and node j is selected ONLY when both node i and node j are selected as neighbors for each other. If sym = "or", the edge is selected when either node i or node j is selected as the neighbor for each other. The default value is "or". (refer to huge manual)
 #' @param verbose If \code{verbose = FALSE}, tracing information printing for HUGE (High-dimensional Undirected Graph Estimation) with a specified method (currently "mb" is only available) is disabled. The default value is TRUE.
-#' @param verboseR If \code{verboseR = FALSE}, printing information whetehr nearPD is used or not is disabled. The defalut value is TRUE.
-#' @param Rmethod The calculation method of latent correlation. Either "original" method or "approx". If \code{Rmethod = "approx"}, multilinear approximation method is used, which is much faster than the original method. If \code{Rmethod = "original"}, optimization of the bridge inverse function is used. The default is "approx".
-#' @param tol Desired accuracy when calculating the solution of bridge function in latentcor function.
+#' @param Rmethod The calculation method of latent correlation. Either "approx" or "original". If \code{Rmethod = "approx"}, multilinear approximation method is used, which is much faster than the original method. If \code{Rmethod = "original"}, optimization of the bridge inverse function is used. The default is "approx".
+#' @inheritParams latentcor::latentcor
 #'
 #' @return \code{hugeKmb} returns a data.frame containing
 #' \itemize{
@@ -30,8 +29,8 @@
 #' @importFrom huge huge.mb
 #' @export
 #'
-hugeKmb <- function(data, lambda, type = "tru", sym = "or", verbose = TRUE, verboseR = TRUE, Rmethod = "approx", tol = 1e-6) {
-  S    <- latentcor::latentcor(data, types = type, method = Rmethod, tol = tol)$R
+hugeKmb <- function(data, lambda, type = "tru", sym = "or", verbose = TRUE, Rmethod = c("approx", "original"), tol = 1e-6, use.nearPD = TRUE, nu = 0.001, ratio = 0.9) {
+  S    <- latentcor::latentcor(data, types = type, method = Rmethod, tol = tol, use.nearPD = use.nearPD, nu = nu, ratio = ratio, showplot = FALSE)$R
   est  <- huge::huge.mb(S, lambda, sym = sym, verbose = verbose)
   est
 }

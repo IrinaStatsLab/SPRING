@@ -71,7 +71,7 @@ SPRING <- function(data, quantitative = FALSE, method = "mb", lambda.min.ratio =
 
   if(is.character(lambdaseq)){
     if(lambdaseq == "data-specific"){
-      Kcor <- latentcor::latentcor(qdat, types = "trunc", method = Rmethod, tol = Rtol)$R
+      Kcor <- latentcor::latentcor(qdat, types = "tru", method = Rmethod, tol = Rtol)$R
       # generate lambda sequence
       lambda.max <- max(max(Kcor-diag(p)), -min(Kcor-diag(p)))
       lambda.min <- lambda.min.ratio * lambda.max

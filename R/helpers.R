@@ -13,7 +13,7 @@
 #'
 #' @param data n by p matrix data. usually through pulsar, data will receive subsamples.
 #' @param lambda a vector of lambda values
-#' @param type a type of variables. "trunc" is default.
+#' @param type a type of variables passed to \code{latentcor}. "tru" (truncated) is default. See \code{latentcor::latentcor} for valid values ("con", "bin", "tru", "ter").
 #' @param sym "or" is the symmetrizing rule of the output graphs. If sym = "and", the edge between node i and node j is selected ONLY when both node i and node j are selected as neighbors for each other. If sym = "or", the edge is selected when either node i or node j is selected as the neighbor for each other. The default value is "or". (refer to huge manual)
 #' @param verbose If \code{verbose = FALSE}, tracing information printing for HUGE (High-dimensional Undirected Graph Estimation) with a specified method (currently "mb" is only available) is disabled. The default value is TRUE.
 #' @param verboseR If \code{verboseR = FALSE}, printing information whetehr nearPD is used or not is disabled. The defalut value is TRUE.
@@ -30,7 +30,7 @@
 #' @importFrom huge huge.mb
 #' @export
 #'
-hugeKmb <- function(data, lambda, type = "trunc", sym = "or", verbose = TRUE, verboseR = TRUE, Rmethod = "approx", tol = 1e-6) {
+hugeKmb <- function(data, lambda, type = "tru", sym = "or", verbose = TRUE, verboseR = TRUE, Rmethod = "approx", tol = 1e-6) {
   S    <- latentcor::latentcor(data, types = type, method = Rmethod, tol = tol)$R
   est  <- huge::huge.mb(S, lambda, sym = sym, verbose = verbose)
   est

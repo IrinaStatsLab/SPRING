@@ -4,20 +4,23 @@
 #'
 #' @param data n by p matrix of microbiome count data, either quantitative or compositional counts. Each row represents each subject/sample and each column represents each OTU (operational taxonomic unit).
 #' @param quantitative default is FALSE, which means input "data" is compositional data, which will be normalized using mclr transformation within a function. If TRUE, it means "quantitative" counts are input and no normalization will be applied.
-#' @param method graph estimation methods. Currently, only "mb" method is available.
-#' @param lambda.min.ratio default is 0.01
-#' @param nlambda default is 20.
+#' @param method graph estimation method. Currently only \code{"mb"} (Meinshausen-Bühlmann neighborhood selection) is available.
+#' @param lambda.min.ratio ratio of the smallest to largest value in the lambda sequence. Default is 0.01.
+#' @param nlambda number of lambda values in the regularization sequence. Default is 20.
 #' @param lambdaseq a sequence of decreasing positive numbers to control the regularization. The default sequence has 20 values generated to be equally spaced on a logarithmic scale from 0.6 to 0.006. Users can specify a sequence to override the default sequence. If user specify as "data-specific", then the lambda sequence will be generated using estimated rank-based correlation matrix from data.
 #' @param seed the seed for subsampling.
 #' @param ncores number of cores to use for subsampling. The default is 1.
 #' @param thresh threshold for StARS selection criterion. 0.1 is recommended (default). The smaller threshold returns sparser graph.
 #' @param subsample.ratio 0.8 is default. The recommended values are 10*sqrt(n)/n for n > 144 or 0.8 otherwise.
-#' @param rep.num the repetition number of subsampling for StARS eddge stability selection. The default value is 20.
-#' @param Rtol Desired accuracy when calculating the solution of bridge function in latentcor function.
+#' @param rep.num the repetition number of subsampling for StARS edge stability selection. The default value is 20.
+#' @param Rtol Desired accuracy when calculating the solution of bridge function in latentcor. Default is 1e-6.
 #' @param verbose If \code{verbose = FALSE}, tracing information printing for HUGE (High-dimensional Undirected Graph Estimation) with a specified method (currently "mb" is only available) is disabled. The default value is TRUE.
-#' @param Rmethod The calculation method of latent correlation. Either "approx" or "original". If \code{Rmethod = "approx"}, multilinear approximation method is used, which is much faster than the original method. If \code{Rmethod = "original"}, optimization of the bridge inverse function is used. The default is "approx".
+#' @param Rmethod The calculation method of latent correlation. Either \code{"approx"} or \code{"original"}. If \code{Rmethod = "approx"}, multilinear approximation method is used, which is much faster than the original method. If \code{Rmethod = "original"}, optimization of the bridge inverse function is used. The default is \code{"approx"}.
+#' @param use.nearPD Logical indicator. \code{use.nearPD = TRUE} gets nearest positive definite matrix for the estimated latent correlation matrix with shrinkage adjustment by \code{nu}. Output \code{R} is the same as \code{Rpointwise} if \code{use.nearPD = FALSE}. Default value is \code{TRUE}.
+#' @param nu Shrinkage parameter for the correlation matrix, must be between 0 and 1. Guarantees that the minimal eigenvalue of the returned correlation matrix is greater or equal to \code{nu}. The default (recommended) value is 0.001.
+#' @param ratio When \code{Rmethod = "approx"}, specifies the boundary value for multilinear interpolation, must be between 0 and 1. The default (recommended) value is 0.9. Ignored when \code{Rmethod = "original"}.
 #'
-#' @return \code{SPRING} returns a data.frame containing
+#' @return \code{SPRING} returns a list containing
 #' \itemize{
 #'       \item{output: }{Output results of \code{pulsar::pulsar} based on StARS criterion. It contains:}
 #'               \itemize{
@@ -37,7 +40,6 @@
 #'               }
 #'       \item{lambdaseq: }{lambda sequence used in the analysis}
 #' }
-#' @importFrom huge huge.mb
 #' @importFrom pulsar pulsar
 #' @importFrom latentcor latentcor
 #'
@@ -51,7 +53,9 @@
 #'
 #' @example man/examples/ex.R
 #'
-SPRING <- function(data, quantitative = FALSE, method = "mb", lambda.min.ratio = 1e-2, nlambda = 20, lambdaseq = exp(seq(log(0.6), log(0.6*lambda.min.ratio), length.out = nlambda)), seed = 10010, ncores = 1, thresh = 0.1, subsample.ratio = 0.8, rep.num = 20, Rtol = 1e-6, verbose = TRUE, Rmethod = "approx"){
+SPRING <- function(data, quantitative = FALSE, method = c("mb"), lambda.min.ratio = 1e-2, nlambda = 20, lambdaseq = exp(seq(log(0.6), log(0.6*lambda.min.ratio), length.out = nlambda)), seed = 10010, ncores = 1, thresh = 0.1, subsample.ratio = 0.8, rep.num = 20, Rtol = 1e-6, verbose = TRUE, Rmethod = "approx", use.nearPD = TRUE, nu = 0.001, ratio = 0.9){
+
+  method <- match.arg(method)
 
   if (any(data < 0)) {
     stop("Negative values are detected, but either quantitative or compositional counts are expected.\n")
@@ -70,7 +74,7 @@ SPRING <- function(data, quantitative = FALSE, method = "mb", lambda.min.ratio =
 
   if(is.character(lambdaseq)){
     if(lambdaseq == "data-specific"){
-      Kcor <- latentcor::latentcor(qdat, types = "tru", method = Rmethod, tol = Rtol)$R
+      Kcor <- latentcor::latentcor(qdat, types = "tru", method = Rmethod, tol = Rtol, use.nearPD = use.nearPD, nu = nu, ratio = ratio)$R
       # generate lambda sequence
       lambda.max <- max(max(Kcor-diag(p)), -min(Kcor-diag(p)))
       lambda.min <- lambda.min.ratio * lambda.max
@@ -84,7 +88,7 @@ SPRING <- function(data, quantitative = FALSE, method = "mb", lambda.min.ratio =
     fun <- hugeKmb
   }
 
-  out1.K_count <- pulsar::pulsar(qdat, fun = fun, fargs = list(lambda = lambdaseq, Rmethod = Rmethod, tol = Rtol, verbose = verbose), rep.num = rep.num, criterion = 'stars', seed = seed, ncores = ncores, thresh = thresh, subsample.ratio = subsample.ratio)
+  out1.K_count <- pulsar::pulsar(qdat, fun = fun, fargs = list(lambda = lambdaseq, Rmethod = Rmethod, tol = Rtol, verbose = verbose, use.nearPD = use.nearPD, nu = nu, ratio = ratio), rep.num = rep.num, criterion = 'stars', seed = seed, ncores = ncores, thresh = thresh, subsample.ratio = subsample.ratio)
 
   fit1.K_count <- pulsar::refit(out1.K_count)
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/helpers.R
 \name{hugeKmb}
 \alias{hugeKmb}
-\title{Internal wrapper function to implement rank-based correlation to huge.mb function in "huge" package.}
+\title{Internal wrapper function to implement rank-based correlation to huge.mb function in "huge" package}
 \usage{
 hugeKmb(
   data,
@@ -30,6 +30,8 @@ hugeKmb(
 
 \item{Rmethod}{The calculation method of latent correlation. Either "approx" or "original". If \code{Rmethod = "approx"}, multilinear approximation method is used, which is much faster than the original method. If \code{Rmethod = "original"}, optimization of the bridge inverse function is used. The default is "approx".}
 
+\item{tol}{When \code{Rmethod = "original"}, desired accuracy of the bridge function inversion. Ignored when \code{Rmethod = "approx"}. Default is 1e-6.}
+
 \item{use.nearPD}{Logical indicator. \code{use.nearPD = TRUE} gets nearest positive definite matrix for the estimated latent correlation matrix with shrinkage adjustment by \code{nu}. Output \code{R} is the same as \code{Rpointwise} if \code{use.nearPD = FALSE}. Default value is \code{TRUE}.}
 
 \item{nu}{Shrinkage parameter for the correlation matrix, must be between 0 and 1. Guarantees that the minimal eigenvalue of the returned correlation matrix is greater or equal to \code{nu}. The default (recommended) value is 0.001.}
@@ -38,16 +40,16 @@ hugeKmb(
 }
 \value{
 \code{hugeKmb} returns a list containing
-\itemize{
-     \item{beta: }{a list of length \code{nlambda}, each element is a sparse p by p matrix of MB coefficient estimates at the corresponding lambda value.}
-     \item{path: }{a list of length \code{nlambda}, each element is a sparse p by p adjacency matrix of selected edges (symmetrized) at the corresponding lambda value.}
-     \item{df: }{a vector of length \code{nlambda * p} giving the number of selected neighbors for each node at each lambda value.}
-     \item{sparsity: }{a vector of length \code{nlambda} giving the proportion of selected edges at each lambda value.}
-     \item{lambda: }{the lambda sequence used.}
-     \item{cov.input: }{logical, whether the input was identified as a covariance matrix.}
-     \item{scr: }{logical, whether screening was applied.}
+\describe{
+     \item{beta}{a list of length \code{nlambda}, each element is a sparse p by p matrix of MB coefficient estimates at the corresponding lambda value.}
+     \item{path}{a list of length \code{nlambda}, each element is a sparse p by p adjacency matrix of selected edges (symmetrized) at the corresponding lambda value.}
+     \item{df}{a vector of length \code{nlambda * p} giving the number of selected neighbors for each node at each lambda value.}
+     \item{sparsity}{a vector of length \code{nlambda} giving the proportion of selected edges at each lambda value.}
+     \item{lambda}{the lambda sequence used.}
+     \item{cov.input}{logical, whether the input was identified as a covariance matrix.}
+     \item{scr}{logical, whether screening was applied.}
 }
 }
 \description{
-Internal wrapper function to implement rank-based correlation to huge.mb function in "huge" package.
+Internal wrapper function to implement rank-based correlation to huge.mb function in "huge" package
 }

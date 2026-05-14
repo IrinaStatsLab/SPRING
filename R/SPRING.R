@@ -4,7 +4,7 @@
 #'
 #' @param data n by p matrix of microbiome count data, either quantitative or compositional counts. Each row represents each subject/sample and each column represents each OTU (operational taxonomic unit).
 #' @param quantitative default is FALSE, which means input "data" is compositional data, which will be normalized using mclr transformation within a function. If TRUE, it means "quantitative" counts are input and no normalization will be applied.
-#' @param method graph estimation method. Currently only \code{"mb"} (Meinshausen-Bühlmann neighborhood selection) is available.
+#' @param method graph estimation method. Currently only \code{"mb"} (Meinshausen-Buehlmann neighborhood selection) is available.
 #' @param lambda.min.ratio ratio of the smallest to largest value in the lambda sequence. Default is 0.01.
 #' @param nlambda number of lambda values in the regularization sequence. Default is 20.
 #' @param lambdaseq a sequence of decreasing positive numbers to control the regularization. The default sequence has 20 values generated to be equally spaced on a logarithmic scale from 0.6 to 0.006. Users can specify a sequence to override the default sequence. If user specify as "data-specific", then the lambda sequence will be generated using estimated rank-based correlation matrix from data.
@@ -21,24 +21,24 @@
 #' @param ratio When \code{Rmethod = "approx"}, specifies the boundary value for multilinear interpolation, must be between 0 and 1. The default (recommended) value is 0.9. Ignored when \code{Rmethod = "original"}.
 #'
 #' @return \code{SPRING} returns a list containing
-#' \itemize{
-#'       \item{output: }{Output results of \code{pulsar::pulsar} based on StARS criterion. It contains:}
-#'               \itemize{
-#'                        \item{merge: } a list of length \code{nlambda} and each element of list contains a matrix of edge selection probability. Each lambda value, this edge selection probability is calculated across \code{rep.num}.
-#'                        \item{summary: } the summary statistic over \code{rep.num} graphs at each value of lambda
-#'                        \item{opt.index: } index (along the path) of optimal lambda selected by the criterion at the desired threshold. Will return \eqn{0} if no optimum is found or \code{NULL} if selection for the criterion is not implemented.
-#'                        \item{criterion: } we use StARS for our stability criterion.
-#'               }
-#'       \item{fit: }{Output results of \code{pulsar::refit} function. It contains:}
-#'       \itemize{
-#'               \item{est: } a list containing
-#'               \itemize{
-#'                        \item{beta: } Estimates of beta coefficient matrices (of size p by p) by "mb" method on the whole data at each of whole lambda sequence value.
-#'                        \item{path: } Estimates of precision matrix (of size p by p) on the whole data at each of whole lambda sequence value.
-#'               }
-#'               \item{refit: } final estimates of precision matrix (of size p by p).
-#'               }
-#'       \item{lambdaseq: }{lambda sequence used in the analysis}
+#' \describe{
+#'       \item{output}{Output results of \code{pulsar::pulsar} based on StARS criterion. It contains:
+#'               \describe{
+#'                        \item{merge}{a list of length \code{nlambda} and each element of list contains a matrix of edge selection probability. Each lambda value, this edge selection probability is calculated across \code{rep.num}.}
+#'                        \item{summary}{the summary statistic over \code{rep.num} graphs at each value of lambda.}
+#'                        \item{opt.index}{index (along the path) of optimal lambda selected by the criterion at the desired threshold. Will return \eqn{0} if no optimum is found or \code{NULL} if selection for the criterion is not implemented.}
+#'                        \item{criterion}{we use StARS for our stability criterion.}
+#'               }}
+#'       \item{fit}{Output results of \code{pulsar::refit} function. It contains:
+#'               \describe{
+#'                        \item{est}{a list containing:
+#'                               \describe{
+#'                                        \item{beta}{Estimates of beta coefficient matrices (of size p by p) by "mb" method on the whole data at each lambda sequence value.}
+#'                                        \item{path}{Estimates of adjacency matrix (of size p by p) on the whole data at each lambda sequence value.}
+#'                               }}
+#'                        \item{refit}{final estimates of adjacency matrix (of size p by p).}
+#'               }}
+#'       \item{lambdaseq}{lambda sequence used in the analysis.}
 #' }
 #' @importFrom pulsar pulsar
 #' @importFrom latentcor latentcor
@@ -49,7 +49,7 @@
 #'
 #' Meinshausen N. and Buhlmann P. (2006) \href{https://projecteuclid.org/download/pdfview_1/euclid.aos/1152540754}{"High-dimensional graphs and variable selection with the lasso"}, \emph{The Annals of Statistics}, Vol 34, No. 3, 1436 - 1462.
 #'
-#' Yoon G., Gaynanova I. and Müller C. (2019) \href{https://www.frontiersin.org/articles/10.3389/fgene.2019.00516/full}{"Microbial Networks in SPRING - Semi-parametric Rank-Based Correlation and Partial Correlation Estimation for Quantitative Microbiome Data"}, \emph{Frontiers in Genetics}, 10:516.
+#' Yoon G., Gaynanova I. and Mueller C. (2019) \href{https://www.frontiersin.org/articles/10.3389/fgene.2019.00516/full}{"Microbial Networks in SPRING - Semi-parametric Rank-Based Correlation and Partial Correlation Estimation for Quantitative Microbiome Data"}, \emph{Frontiers in Genetics}, 10:516.
 #'
 #' @example man/examples/ex.R
 #'

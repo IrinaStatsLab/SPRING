@@ -13,7 +13,7 @@ mclr(dat, base = exp(1), tol = 1e-16, eps = NULL, atleast = 1)
 
 \item{tol}{tolerance for checking zeros}
 
-\item{eps}{epsilon in eq (2) of the paper "Yoon, Gaynanova, M\"{u}ller (2019), Frontiers in Genetics". positive shifts to all non-zero compositions. Refer to the paper for more details. eps = absolute value of minimum of log ratio counts plus c.}
+\item{eps}{epsilon in eq (2) of the paper "Yoon, Gaynanova, Mueller (2019), Frontiers in Genetics". positive shifts to all non-zero compositions. Refer to the paper for more details. eps = absolute value of minimum of log ratio counts plus c.}
 
 \item{atleast}{default value is 1. Constant c which ensures all nonzero values to be strictly positive. default is 1.}
 }

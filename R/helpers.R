@@ -9,7 +9,7 @@
 # to do network visualization (for edge color, I need beta)
 
 
-#' Internal wrapper function to implement rank-based correlation to huge.mb function in "huge" package.
+#' Internal wrapper function to implement rank-based correlation to huge.mb function in "huge" package
 #'
 #' @param data n by p matrix data. usually through pulsar, data will receive subsamples.
 #' @param lambda a vector of lambda values
@@ -20,16 +20,17 @@
 #' @param use.nearPD Logical indicator. \code{use.nearPD = TRUE} gets nearest positive definite matrix for the estimated latent correlation matrix with shrinkage adjustment by \code{nu}. Output \code{R} is the same as \code{Rpointwise} if \code{use.nearPD = FALSE}. Default value is \code{TRUE}.
 #' @param nu Shrinkage parameter for the correlation matrix, must be between 0 and 1. Guarantees that the minimal eigenvalue of the returned correlation matrix is greater or equal to \code{nu}. The default (recommended) value is 0.001.
 #' @param ratio When \code{Rmethod = "approx"}, specifies the boundary value for multilinear interpolation, must be between 0 and 1. The default (recommended) value is 0.9. Ignored when \code{Rmethod = "original"}.
+#' @param tol When \code{Rmethod = "original"}, desired accuracy of the bridge function inversion. Ignored when \code{Rmethod = "approx"}. Default is 1e-6.
 #'
 #' @return \code{hugeKmb} returns a list containing
-#' \itemize{
-#'      \item{beta: }{a list of length \code{nlambda}, each element is a sparse p by p matrix of MB coefficient estimates at the corresponding lambda value.}
-#'      \item{path: }{a list of length \code{nlambda}, each element is a sparse p by p adjacency matrix of selected edges (symmetrized) at the corresponding lambda value.}
-#'      \item{df: }{a vector of length \code{nlambda * p} giving the number of selected neighbors for each node at each lambda value.}
-#'      \item{sparsity: }{a vector of length \code{nlambda} giving the proportion of selected edges at each lambda value.}
-#'      \item{lambda: }{the lambda sequence used.}
-#'      \item{cov.input: }{logical, whether the input was identified as a covariance matrix.}
-#'      \item{scr: }{logical, whether screening was applied.}
+#' \describe{
+#'      \item{beta}{a list of length \code{nlambda}, each element is a sparse p by p matrix of MB coefficient estimates at the corresponding lambda value.}
+#'      \item{path}{a list of length \code{nlambda}, each element is a sparse p by p adjacency matrix of selected edges (symmetrized) at the corresponding lambda value.}
+#'      \item{df}{a vector of length \code{nlambda * p} giving the number of selected neighbors for each node at each lambda value.}
+#'      \item{sparsity}{a vector of length \code{nlambda} giving the proportion of selected edges at each lambda value.}
+#'      \item{lambda}{the lambda sequence used.}
+#'      \item{cov.input}{logical, whether the input was identified as a covariance matrix.}
+#'      \item{scr}{logical, whether screening was applied.}
 #' }
 #'
 #' @importFrom huge huge.mb
@@ -52,7 +53,7 @@ hugeKmb <- function(data, lambda, type = "tru", sym = "or", verbose = TRUE, Rmet
 #' @param tol tolerance for checking zeros
 
 # For eps and atleast, users do not have to specify any values. Default should be enough.
-#' @param eps epsilon in eq (2) of the paper "Yoon, Gaynanova, M\"{u}ller (2019), Frontiers in Genetics". positive shifts to all non-zero compositions. Refer to the paper for more details. eps = absolute value of minimum of log ratio counts plus c.
+#' @param eps epsilon in eq (2) of the paper "Yoon, Gaynanova, Mueller (2019), Frontiers in Genetics". positive shifts to all non-zero compositions. Refer to the paper for more details. eps = absolute value of minimum of log ratio counts plus c.
 #' @param atleast default value is 1. Constant c which ensures all nonzero values to be strictly positive. default is 1.
 #'
 #'

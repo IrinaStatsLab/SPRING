@@ -4,17 +4,17 @@ Version: 1.0.4
 Authors@R: c(
     person(given = "Grace",
            family = "Yoon",
-           role = c("aut", "cre"),
+           role = c("aut"),
            email = "gyoon6067@gmail.com",
            comment = c(ORCID = "0000-0003-3263-1352")),
     person(given = "Irina",
            family = "Gaynanova",
-           role = c("aut"),
-           email = "irinag@stat.tamu.edu"),
+           role = c("aut", "cre"),
+           email = "irinagn@umich.edu"),
     person(given = "Christian",
            family = "Müller",
            role = c("aut"),
-           email = "cmueller@flatironinstitute.org"))
+           email = "christian.mueller@helmholtz-munich.de"))
 Description: SPRING is to estimate sparse microbial association networks using rank-based correlation with sparse graphical modeling techniques.
 License: GPL-3
 Encoding: UTF-8

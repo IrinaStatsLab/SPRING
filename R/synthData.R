@@ -35,7 +35,7 @@ synthData_from_ecdf <- function(comm, mar = 2, Sigma, n, seed = 10010, verbose =
     empf <- ecdf(comm[, j]) # empf is a cdf function. empf(c) = Pr(X <= c)
 
     ptm <- proc.time()
-    for ( k in 1:length(nzind) ){
+    for ( k in seq_along(nzind) ){
       # This is called "inverse transform sampling". https://en.wikipedia.org/wiki/Inverse_transform_sampling
       # Since the range of the cdf/quantile function is in [0, 1]
       # we want to what is the data value corresponding to a probability (value from unif variable) between 0 and 1.
@@ -43,7 +43,7 @@ synthData_from_ecdf <- function(comm, mar = 2, Sigma, n, seed = 10010, verbose =
       dat[nzind[k], j] <- qstepcdf(unif[nzind[k], j], empf, interval = c(0, maxabund[j]))
     }
     if(verbose == TRUE) {
-      cat("iteration = ", j , ": time = ", proc.time() - ptm, "\n")
+      message("iteration = ", j , ": time = ", proc.time() - ptm)
     }
 
   }

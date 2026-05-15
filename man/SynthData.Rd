@@ -6,7 +6,7 @@
 \alias{SynthData2}
 \title{Synthetic count data}
 \format{
-\code{SynthData} is an object of class \code{matrix} with 500 rows and 200 columns. \code{SynthData2} is an object of class \code{matrix} with 1000 rows and 100 columns.
+\code{SynthData} is an object of class \code{matrix} with 500 rows and 200 columns.
 
 An object of class \code{matrix} (inherits from \code{array}) with 1000 rows and 100 columns.
 }

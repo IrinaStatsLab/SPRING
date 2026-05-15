@@ -42,7 +42,7 @@ synthData_from_ecdf <- function(comm, mar = 2, Sigma, n, seed = 10010, verbose =
       # Basically, we numerically calculate the inverse of empirical cdf. find a solution "empf^{-1}(prob)=?"
       dat[nzind[k], j] <- qstepcdf(unif[nzind[k], j], empf, interval = c(0, maxabund[j]))
     }
-    if(verbose == TRUE) {
+    if(isTRUE(verbose)) {
       message("iteration = ", j , ": time = ", proc.time() - ptm)
     }
 

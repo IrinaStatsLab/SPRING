@@ -15,7 +15,12 @@ Authors@R: c(
     person(given = "Christian",
            family = "Müller",
            role = c("aut"),
-           email = "christian.mueller@helmholtz-munich.de"))
+           email = "christian.mueller@helmholtz-munich.de"),
+    person("National Cancer Institute", role = "fnd",
+           comment = "Grant T32-CA090301"),
+    person("National Science Foundation", role = "fnd",
+           comment = "Grant DMS-1712943"),
+    person("Simons Foundation", role = "fnd"))
 Description: Provides methods for sparse microbial association network estimation
     from microbiome count data. The core function implements SPRING (Semi-Parametric
     Rank-based approach for INference in Graphical models), which estimates latent

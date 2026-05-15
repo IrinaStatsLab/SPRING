@@ -25,5 +25,12 @@ Authors:
   \item Christian Müller \email{christian.mueller@helmholtz-munich.de}
 }
 
+Other contributors:
+\itemize{
+  \item National Cancer Institute (Grant T32-CA090301) [funder]
+  \item National Science Foundation (Grant DMS-1712943) [funder]
+  \item Simons Foundation [funder]
+}
+
 }
 \keyword{internal}

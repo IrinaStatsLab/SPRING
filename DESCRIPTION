@@ -10,7 +10,8 @@ Authors@R: c(
     person(given = "Irina",
            family = "Gaynanova",
            role = c("aut", "cre"),
-           email = "irinagn@umich.edu"),
+           email = "irinagn@umich.edu",
+           comment = c(ORCID = "0000-0002-4116-0268")),
     person(given = "Christian",
            family = "Müller",
            role = c("aut"),
@@ -30,10 +31,10 @@ URL: https://github.com/IrinaStatsLab/SPRING
 BugReports: https://github.com/IrinaStatsLab/SPRING/issues
 License: GPL-3
 Encoding: UTF-8
-LazyData: true
-Depends: R (>= 4.4.0)
+Depends: R (>= 4.6.0)
 Imports: latentcor, SpiecEasi, huge, pulsar, rootSolve, mvtnorm, stats
-biocViews: GraphAndNetwork, Microbiome, Normalization, Sequencing
+biocViews: GraphAndNetwork, Microbiome, NetworkInference, Network,
+    Normalization, Sequencing
 Suggests:
     testthat (>= 2.1.0),
     BiocStyle,

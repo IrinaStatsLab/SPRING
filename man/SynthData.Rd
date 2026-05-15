@@ -19,6 +19,7 @@ data(SynthData)
 data(SynthData2)
 }
 \description{
-SynthData and SynthData2 were generated using empirical cdf of American Gut Project Data. SynthData has scale_free-type-graph structure of size 500 rows and 200 columns, and SynthData2 has cluster-type-graph structure of size 1000 rows and 100 columns.
+SynthData and SynthData2 were generated using empirical cdf of American Gut Project Data.
+SynthData has scale_free-type-graph structure of size 500 rows and 200 columns, and SynthData2 has cluster-type-graph structure of size 1000 rows and 100 columns.
 }
 \keyword{datasets}

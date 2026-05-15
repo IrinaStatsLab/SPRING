@@ -16,11 +16,11 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Irina Gaynanova \email{irinagn@umich.edu}
+\strong{Maintainer}: Irina Gaynanova \email{irinagn@umich.edu} (\href{https://orcid.org/0000-0002-4116-0268}{ORCID})
 
 Authors:
 \itemize{
-  \item Irina Gaynanova \email{irinagn@umich.edu}
+  \item Irina Gaynanova \email{irinagn@umich.edu} (\href{https://orcid.org/0000-0002-4116-0268}{ORCID})
   \item Grace Yoon \email{gyoon6067@gmail.com} (\href{https://orcid.org/0000-0003-3263-1352}{ORCID})
   \item Christian Müller \email{christian.mueller@helmholtz-munich.de}
 }

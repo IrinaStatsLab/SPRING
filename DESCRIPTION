@@ -26,6 +26,8 @@ Description: Provides methods for sparse microbial association network estimatio
     provides a synthetic count data generator based on the empirical cumulative
     distribution function of real microbiome data, enabling reproducible simulation
     studies under user-specified network structures.
+URL: https://github.com/IrinaStatsLab/SPRING
+BugReports: https://github.com/IrinaStatsLab/SPRING/issues
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

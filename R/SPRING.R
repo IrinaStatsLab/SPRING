@@ -62,14 +62,13 @@ SPRING <- function(data, quantitative = FALSE, method = c("mb"), lambda.min.rati
   }
   p <- ncol(data)
   if (quantitative){
-    if (max(rowSums(data)) <= 1 | isTRUE(all.equal(max(rowSums(data)), 1))){
+    if (max(rowSums(data)) <= 1 || isTRUE(all.equal(max(rowSums(data)), 1))){
       warning("The input data is normalized, but quantitative count data is expected.\n")
     }
     qdat <- data
   } else {
     qdat <- mclr(data)
   }
-  rm(data)
   gc()
 
   if(is.character(lambdaseq)){

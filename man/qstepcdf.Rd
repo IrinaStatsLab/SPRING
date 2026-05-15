@@ -17,6 +17,10 @@ qstepcdf(p, empf, interval, tol = 0.001, maxiter = 100)
 
 \item{maxiter}{the maximum number of iterations for \code{uniroot.all}.}
 }
+\value{
+A numeric scalar: the count value corresponding to probability \code{p}
+  under the empirical CDF.
+}
 \description{
 Inverse function of empirical cumulative distribution function (ecdf)
 }

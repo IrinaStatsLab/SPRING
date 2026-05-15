@@ -15,7 +15,17 @@ Authors@R: c(
            family = "Mueller",
            role = c("aut"),
            email = "christian.mueller@helmholtz-munich.de"))
-Description: SPRING is to estimate sparse microbial association networks using rank-based correlation with sparse graphical modeling techniques.
+Description: Provides methods for sparse microbial association network estimation
+    from microbiome count data. The core function implements SPRING (Semi-Parametric
+    Rank-based approach for INference in Graphical models), which estimates latent
+    correlations via a truncated Gaussian copula model and fits sparse graphical
+    models using Meinshausen-Buehlmann neighborhood selection with StARS stability
+    selection. Both quantitative microbiome data and compositional (relative
+    abundance) data are supported; the latter via a modified central log-ratio
+    (mclr) transformation that accounts for zero-inflated counts. The package also
+    provides a synthetic count data generator based on the empirical cumulative
+    distribution function of real microbiome data, enabling reproducible simulation
+    studies under user-specified network structures.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -26,6 +36,7 @@ Suggests:
     testthat (>= 2.1.0),
     BiocStyle,
     knitr,
-    rmarkdown
+    rmarkdown,
+    corrplot
 VignetteBuilder: knitr
 Config/roxygen2/version: 8.0.0

@@ -85,25 +85,23 @@ SPRING(
 SPRING follows the neighborhood selection methodology outlined in "mb" method (Meinshausen and Buhlmann (2006)).
 }
 \examples{
-rm(list = ls())
-library(SPRING)
+data(QMP)
 
-# Load the synthetic count data
-data("QMP") # n = 1000 and p = 100 synthetic dataset
+# Fast example: small subset, few subsamples
+fit <- SPRING(QMP[, 1:10], quantitative = TRUE, nlambda = 10, rep.num = 10,
+              verbose = FALSE)
 
-# SPRING on Synthetic Data, when assuming the data as quantitative counts.
-# The same setting used in Yoon et al. (2019) Frontiers in Genetics.
-\dontrun{
-# This takes around 23 minutes.
-fit.spring <- SPRING(QMP, quantitative = TRUE, lambdaseq = "data-specific",
-                     nlambda = 50, seed = 10010, ncores = 2, rep.num = 50)
+# Compositional data: apply mclr transformation internally
+\donttest{
+RMP <- QMP / rowSums(QMP)
+fit_comp <- SPRING(RMP, quantitative = FALSE, nlambda = 10, rep.num = 10,
+                   verbose = FALSE)
 }
 
-# SPRING on Compositional data. Row sums are scaled to 1. Then, mclr-transformation will be applied.
-\dontrun{
-compoData <- QMP/rowSums(QMP)
-fit.spring <- SPRING(compoData, quantitative = FALSE, lambdaseq = "data-specific",
-                     nlambda = 10, rep.num = 10)
+# Full analysis as in Yoon et al. (2019) -- slow, ~20 min on full data
+\donttest{
+fit_full <- SPRING(QMP, quantitative = TRUE, lambdaseq = "data-specific",
+                   nlambda = 50, rep.num = 50, verbose = FALSE)
 }
 }
 \references{

@@ -6,3 +6,6 @@
 .httr-oauth
 .DS_Store
 *.Rcheck/
+*.BiocCheck/
+*.tar.gz
+

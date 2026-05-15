@@ -1,5 +1,8 @@
 ^SPRING\.Rproj$
+^\.DS_Store$
 ^\.Rproj\.user$
 ^README\.Rmd$
 ^README-.*\.png$
-^data-raw$
+^SPRING\.BiocCheck$
+^SPRING\.Rcheck$
+^SPRING_.*\.tar\.gz$

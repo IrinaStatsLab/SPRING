@@ -1,5 +1,3 @@
-library(SPRING)
-
 # --- mclr -------------------------------------------------------------------
 
 test_that("mclr returns same dimensions as input", {

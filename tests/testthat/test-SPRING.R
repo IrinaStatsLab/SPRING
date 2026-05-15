@@ -1,5 +1,3 @@
-library(SPRING)
-
 # Helper: run SPRING on a small subset with minimal iterations.
 # suppressWarnings silences pulsar's "Optimal lambda may be larger than
 # supplied values" which occurs with small p and few lambdas in tests.

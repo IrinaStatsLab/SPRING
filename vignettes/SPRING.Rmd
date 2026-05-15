@@ -3,7 +3,7 @@ title: "SPRING: Semi-Parametric Rank-Based Microbial Network Estimation"
 author:
   - name: Grace Yoon
   - name: Irina Gaynanova
-  - name: Christian Mueller
+  - name: Christian Müller
 date: "`r Sys.Date()`"
 output: BiocStyle::html_document
 vignette: >
@@ -23,23 +23,23 @@ knitr::opts_chunk$set(
 
 SPRING (Semi-Parametric Rank-based approach for INference in Graphical models)
 estimates sparse microbial association networks from microbiome count data. The
-method is designed to handle the key challenges of microbiome data: excess zeros
-and compositionality.
+method is designed for quantitative microbiome data, but can also work with compositional data via modified central log-ratio (mclr) transformation. 
+For full methodological details, see Yoon G., Gaynanova I. and Müller C.L. (2019) [Microbial Networks in
+SPRING - Semi-parametric Rank-Based Correlation and Partial Correlation
+Estimation for Quantitative Microbiome
+Data](https://www.frontiersin.org/articles/10.3389/fgene.2019.00516/full).
+*Frontiers in Genetics*, 10:516.
 
 The main steps are:
 
-1. Optionally normalize compositional data using the modified centered log-ratio
-   (mclr) transformation.
-2. Estimate a rank-based latent correlation matrix via a truncated Gaussian
-   copula model using `latentcor`.
+1. [For compositional data] Normalize data using the 
+   *mclr* transformation.
+2. Estimate a rank-based latent correlation matrix via a truncated Gaussian copula model. This is based on R package `latentcor` ([Huang et al. (2021)](https://doi.org/10.21105/joss.03634)).
 3. Fit a sparse graphical model using Meinshausen-Buehlmann (MB) neighborhood
    selection across a regularization path.
 4. Select the optimal sparsity level via StARS (Stability Approach to
    Regularization Selection) subsampling.
 
-For full methodological details see Yoon, Gaynanova and Mueller (2019)
-*Frontiers in Genetics* 10:516.
-[doi:10.3389/fgene.2019.00516](https://doi.org/10.3389/fgene.2019.00516)
 
 # Installation
 
@@ -52,8 +52,8 @@ BiocManager::install("SPRING")
 # Example data
 
 The package includes `QMP`, a quantitative microbiome profiling dataset from
-Vandeputte et al. (2017) with 106 subjects and 91 genera, used as the primary
-benchmark in the original paper.
+[Vandeputte et al. (2017)](https://doi.org/10.1038/nature24460) with 106
+subjects and 91 genera, used as the primary benchmark in the original paper.
 
 ```{r data}
 library(SPRING)
@@ -110,6 +110,53 @@ cat("Optimal lambda:", fit$lambdaseq[opt.index], "\n")
 adj <- as.matrix(fit$fit$refit$stars)
 cat("Number of edges:", sum(adj) / 2, "\n")
 ```
+
+# Visualizing the network
+
+The estimated Meinshausen-Buehlmann (MB) coefficients at the optimal lambda
+capture both the presence and direction of associations. We symmetrize them
+(averaging $\hat{\beta}_{ij}$ and $\hat{\beta}_{ji}$) and focus on the
+sub-network of taxa that have at least one strong association $\geq |0.2|$,
+following the criterion used in the original paper.
+
+```{r visualization, fig.width=7, fig.height=7}
+library(corrplot)
+
+# Run SPRING on annotated data (genus names as column labels)
+# Using paper settings (nlambda = 50, rep.num = 50) to reproduce reported associations
+data(QMP_annotated)
+set.seed(10010)
+fit_ann <- SPRING(QMP_annotated, quantitative = TRUE, nlambda = 50, rep.num = 50,
+                  seed = 10010, verbose = FALSE)
+opt_ann <- fit_ann$output$stars$opt.index
+
+# Symmetrize MB coefficients at optimal lambda
+beta_opt <- as.matrix(fit_ann$fit$est$beta[[opt_ann]])
+rownames(beta_opt) <- colnames(beta_opt) <- colnames(QMP_annotated)
+beta_sym <- (beta_opt + t(beta_opt)) / 2
+
+# Subset to taxa with at least one strong association >= |0.2|
+strong <- apply(abs(beta_sym), 1, max) >= 0.2
+beta_sub <- beta_sym[strong, strong]
+cat("Taxa in sub-network:", sum(strong), "\n")
+cat("Strong edges:", sum(abs(beta_sub) >= 0.2) / 2, "\n")
+
+corrplot(beta_sub, method = "color", type = "upper",
+         tl.cex = 0.6, tl.col = "black",
+         title = "Sub-network: taxa with at least one |association| >= 0.2",
+         mar = c(0, 0, 2, 0))
+```
+
+Blue entries indicate positive associations; red entries indicate negative
+associations. Taxa without genus-level classification are labeled by the best
+available higher-level taxonomy (family, order, class, or phylum), with numeric
+suffixes disambiguating multiple unclassified taxa within the same rank (e.g.,
+`Ruminococcaceae` and `Ruminococcaceae_1`).
+
+**Note:** The sub-network shown here may differ slightly from Figure 10 of
+Yoon et al. (2019) because this package now uses `latentcor` for latent
+correlation estimation rather than the original `mixedCCA` implementation,
+which can produce minor differences in estimated associations.
 
 # Session information
 

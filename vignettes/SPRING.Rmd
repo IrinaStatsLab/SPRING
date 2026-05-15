@@ -66,12 +66,13 @@ dim(QMP)
 ## Quantitative count data
 
 When absolute counts are available (`quantitative = TRUE`), no normalization is
-applied. We use a short lambda sequence and few subsamples here for speed; the
-paper uses `nlambda = 50` and `rep.num = 50`.
+applied. We use a very short lambda sequence and few subsamples here for speed;
+the visualization section below uses the paper settings (`nlambda = 50`,
+`rep.num = 50`).
 
 ```{r spring-quantitative}
 set.seed(10010)
-fit <- SPRING(QMP, quantitative = TRUE, nlambda = 15, rep.num = 20,
+fit <- SPRING(QMP, quantitative = TRUE, nlambda = 10, rep.num = 10,
               seed = 10010, verbose = FALSE)
 ```
 

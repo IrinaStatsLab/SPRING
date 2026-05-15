@@ -18,7 +18,7 @@ community variation to microbial load. \emph{Nature}. 551: 507-511.
 \url{doi:10.1038/nature24460}
 }
 \usage{
-QMP
+data(QMP)
 }
 \description{
 Quantitative microbiome count data from Vandeputte et al. (2017)

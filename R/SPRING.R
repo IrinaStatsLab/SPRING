@@ -53,16 +53,15 @@
 #'
 #' @example man/examples/ex.R
 #'
-SPRING <- function(data, quantitative = FALSE, method = c("mb"), lambda.min.ratio = 1e-2, nlambda = 20, lambdaseq = exp(seq(log(0.6), log(0.6*lambda.min.ratio), length.out = nlambda)), seed = 10010, ncores = 1, thresh = 0.1, subsample.ratio = 0.8, rep.num = 20, Rtol = 1e-6, verbose = TRUE, Rmethod = "approx", use.nearPD = TRUE, nu = 0.001, ratio = 0.9){
-
+SPRING <- function(data, quantitative = FALSE, method = c("mb"), lambda.min.ratio = 1e-2, nlambda = 20, lambdaseq = exp(seq(log(0.6), log(0.6 * lambda.min.ratio), length.out = nlambda)), seed = 10010, ncores = 1, thresh = 0.1, subsample.ratio = 0.8, rep.num = 20, Rtol = 1e-6, verbose = TRUE, Rmethod = "approx", use.nearPD = TRUE, nu = 0.001, ratio = 0.9) {
   method <- match.arg(method)
 
   if (any(data < 0)) {
     stop("Negative values are detected, but either quantitative or compositional counts are expected.\n")
   }
   p <- ncol(data)
-  if (quantitative){
-    if (max(rowSums(data)) <= 1 || isTRUE(all.equal(max(rowSums(data)), 1))){
+  if (quantitative) {
+    if (max(rowSums(data)) <= 1 || isTRUE(all.equal(max(rowSums(data)), 1))) {
       warning("The input data is normalized, but quantitative count data is expected.\n")
     }
     qdat <- data
@@ -71,11 +70,11 @@ SPRING <- function(data, quantitative = FALSE, method = c("mb"), lambda.min.rati
   }
   gc()
 
-  if(is.character(lambdaseq)){
-    if(lambdaseq == "data-specific"){
+  if (is.character(lambdaseq)) {
+    if (lambdaseq == "data-specific") {
       Kcor <- latentcor::latentcor(qdat, types = "tru", method = Rmethod, tol = Rtol, use.nearPD = use.nearPD, nu = nu, ratio = ratio)$R
       # generate lambda sequence
-      lambda.max <- max(max(Kcor-diag(p)), -min(Kcor-diag(p)))
+      lambda.max <- max(max(Kcor - diag(p)), -min(Kcor - diag(p)))
       lambda.min <- lambda.min.ratio * lambda.max
       lambdaseq <- exp(seq(log(lambda.max), log(lambda.min), length = nlambda))
     } else {
@@ -83,11 +82,11 @@ SPRING <- function(data, quantitative = FALSE, method = c("mb"), lambda.min.rati
     }
   }
 
-  if(method == "mb"){
+  if (method == "mb") {
     fun <- hugeKmb
   }
 
-  out1.K_count <- pulsar::pulsar(qdat, fun = fun, fargs = list(lambda = lambdaseq, Rmethod = Rmethod, tol = Rtol, verbose = verbose, use.nearPD = use.nearPD, nu = nu, ratio = ratio), rep.num = rep.num, criterion = 'stars', seed = seed, ncores = ncores, thresh = thresh, subsample.ratio = subsample.ratio)
+  out1.K_count <- pulsar::pulsar(qdat, fun = fun, fargs = list(lambda = lambdaseq, Rmethod = Rmethod, tol = Rtol, verbose = verbose, use.nearPD = use.nearPD, nu = nu, ratio = ratio), rep.num = rep.num, criterion = "stars", seed = seed, ncores = ncores, thresh = thresh, subsample.ratio = subsample.ratio)
 
   fit1.K_count <- pulsar::refit(out1.K_count)
 

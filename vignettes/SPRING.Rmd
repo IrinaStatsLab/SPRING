@@ -44,8 +44,9 @@ The main steps are:
 # Installation
 
 ```{r install, eval=FALSE}
-if (!require("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
+if (!require("BiocManager", quietly = TRUE)) {
+  install.packages("BiocManager")
+}
 BiocManager::install("SPRING")
 ```
 
@@ -72,8 +73,10 @@ the visualization section below uses the paper settings (`nlambda = 50`,
 
 ```{r spring-quantitative}
 set.seed(10010)
-fit <- SPRING(QMP, quantitative = TRUE, nlambda = 10, rep.num = 10,
-              seed = 10010, verbose = FALSE)
+fit <- SPRING(QMP,
+  quantitative = TRUE, nlambda = 10, rep.num = 10,
+  seed = 10010, verbose = FALSE
+)
 ```
 
 ## Compositional (relative abundance) data
@@ -83,8 +86,10 @@ default), SPRING first applies the mclr transformation internally.
 
 ```{r spring-compositional, eval=FALSE}
 RMP <- QMP / rowSums(QMP)
-fit_comp <- SPRING(RMP, quantitative = FALSE, nlambda = 15, rep.num = 20,
-                   seed = 10010, verbose = FALSE)
+fit_comp <- SPRING(RMP,
+  quantitative = FALSE, nlambda = 15, rep.num = 20,
+  seed = 10010, verbose = FALSE
+)
 ```
 
 ## Data-specific lambda sequence
@@ -93,8 +98,10 @@ Setting `lambdaseq = "data-specific"` generates a lambda sequence scaled to the
 estimated correlation structure of the data, which can improve edge recovery.
 
 ```{r spring-dataspecific, eval=FALSE}
-fit_ds <- SPRING(QMP, quantitative = TRUE, lambdaseq = "data-specific",
-                 nlambda = 15, rep.num = 20, seed = 10010, verbose = FALSE)
+fit_ds <- SPRING(QMP,
+  quantitative = TRUE, lambdaseq = "data-specific",
+  nlambda = 15, rep.num = 20, seed = 10010, verbose = FALSE
+)
 ```
 
 # Extracting the network
@@ -125,8 +132,10 @@ library(corrplot)
 
 # Run SPRING with paper settings (nlambda = 50, rep.num = 50)
 set.seed(10010)
-fit_ann <- SPRING(QMP, quantitative = TRUE, nlambda = 50, rep.num = 50,
-                  seed = 10010, verbose = FALSE)
+fit_ann <- SPRING(QMP,
+  quantitative = TRUE, nlambda = 50, rep.num = 50,
+  seed = 10010, verbose = FALSE
+)
 opt_ann <- fit_ann$output$stars$opt.index
 
 # Symmetrize MB coefficients at optimal lambda
@@ -140,10 +149,12 @@ beta_sub <- beta_sym[strong, strong]
 cat("Taxa in sub-network:", sum(strong), "\n")
 cat("Strong edges:", sum(abs(beta_sub) >= 0.2) / 2, "\n")
 
-corrplot(beta_sub, method = "color", type = "upper",
-         tl.cex = 0.6, tl.col = "black",
-         title = "Sub-network: taxa with at least one |association| >= 0.2",
-         mar = c(0, 0, 2, 0))
+corrplot(beta_sub,
+  method = "color", type = "upper",
+  tl.cex = 0.6, tl.col = "black",
+  title = "Sub-network: taxa with at least one |association| >= 0.2",
+  mar = c(0, 0, 2, 0)
+)
 ```
 
 Blue entries indicate positive associations; red entries indicate negative

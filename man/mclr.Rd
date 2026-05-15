@@ -25,7 +25,7 @@ Modified central log ratio (mclr) transformation
 }
 \examples{
 data(QMP)
-RMP <- QMP/rowSums(QMP)
+RMP <- QMP / rowSums(QMP)
 mclr_RMP <- mclr(RMP)
 
 }

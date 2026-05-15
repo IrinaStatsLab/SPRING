@@ -43,12 +43,10 @@
 #'
 hugeKmb <- function(data, lambda, type = "tru", sym = "or", verbose = TRUE, Rmethod = c("approx", "original"), tol = 1e-6, use.nearPD = TRUE, nu = 0.001, ratio = 0.9) {
   Rmethod <- match.arg(Rmethod)
-  S    <- latentcor::latentcor(data, types = type, method = Rmethod, tol = tol, use.nearPD = use.nearPD, nu = nu, ratio = ratio, showplot = FALSE)$R
-  est  <- huge::huge.mb(S, lambda, sym = sym, verbose = verbose)
+  S <- latentcor::latentcor(data, types = type, method = Rmethod, tol = tol, use.nearPD = use.nearPD, nu = nu, ratio = ratio, showplot = FALSE)$R
+  est <- huge::huge.mb(S, lambda, sym = sym, verbose = verbose)
   est
 }
-
-
 
 
 #' Modified central log ratio (mclr) transformation
@@ -67,38 +65,38 @@ hugeKmb <- function(data, lambda, type = "tru", sym = "or", verbose = TRUE, Rmet
 #'
 #' @examples
 #' data(QMP)
-#' RMP <- QMP/rowSums(QMP)
+#' RMP <- QMP / rowSums(QMP)
 #' mclr_RMP <- mclr(RMP)
 #'
-mclr <- function(dat, base = exp(1), tol = 1e-16, eps = NULL, atleast = 1){
+mclr <- function(dat, base = exp(1), tol = 1e-16, eps = NULL, atleast = 1) {
   dat <- as.matrix(dat)
-  nzero <- (dat >= tol)  # index for nonzero part
+  nzero <- (dat >= tol) # index for nonzero part
   LOG <- ifelse(nzero, log(dat, base), 0.0) # take log for only nonzero values. zeros stay as zeros.
 
   # centralize by the log of "geometric mean of only nonzero part" # it should be calculated by each row.
-  if (nrow(dat) > 1){
-    clrdat <- ifelse(nzero, LOG - rowMeans(LOG)/rowMeans(nzero), 0.0)
-  } else if (nrow(dat) == 1){
-    clrdat <- ifelse(nzero, LOG - mean(LOG)/mean(nzero), 0.0)
+  if (nrow(dat) > 1) {
+    clrdat <- ifelse(nzero, LOG - rowMeans(LOG) / rowMeans(nzero), 0.0)
+  } else if (nrow(dat) == 1) {
+    clrdat <- ifelse(nzero, LOG - mean(LOG) / mean(nzero), 0.0)
   }
 
-  if (is.null(eps)){
-    if(atleast < 0){
+  if (is.null(eps)) {
+    if (atleast < 0) {
       warning("atleast should be positive. The functions uses default value 1 instead.")
       atleast <- 1
     }
-    if( min(clrdat) < 0 ){ # to find the smallest negative value and add 1 to shift all data larger than zero.
+    if (min(clrdat) < 0) { # to find the smallest negative value and add 1 to shift all data larger than zero.
       positivecst <- abs(min(clrdat)) + atleast # "atleast" has default 1.
-    }else{
+    } else {
       positivecst <- 0
     }
     # positive shift
     ADDpos <- ifelse(nzero, clrdat + positivecst, 0.0) ## make all non-zero values strictly positive.
     return(ADDpos)
-  } else if(eps == 0){
+  } else if (eps == 0) {
     ## no shift. clr transform applied to non-zero proportions only. without pseudo count.
     return(clrdat)
-  } else if(eps > 0){
+  } else if (eps > 0) {
     ## use user-defined eps for additional positive shift.
     ADDpos <- ifelse(nzero, clrdat + eps, 0.0)
     return(ADDpos)

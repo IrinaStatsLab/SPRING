@@ -40,8 +40,10 @@ library(SPRING)
 data("QMP") # 106 samples and 91 taxa
 
 # Apply SPRING on QMP data
-fit <- SPRING(QMP, quantitative = TRUE, nlambda = 50, rep.num = 50,
-              verbose = FALSE)
+fit <- SPRING(QMP,
+  quantitative = TRUE, nlambda = 50, rep.num = 50,
+  verbose = FALSE
+)
 
 # StARS-selected optimal lambda index (default threshold = 0.1)
 opt.index <- fit$output$stars$opt.index

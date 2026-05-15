@@ -3,8 +3,10 @@
 # supplied values" which occurs with small p and few lambdas in tests.
 spring_small <- function(...) {
   suppressWarnings(
-    SPRING(QMP[, 1:10], quantitative = TRUE, nlambda = 5, rep.num = 5,
-           verbose = FALSE, ...)
+    SPRING(QMP[, 1:10],
+      quantitative = TRUE, nlambda = 5, rep.num = 5,
+      verbose = FALSE, ...
+    )
   )
 }
 
@@ -34,8 +36,10 @@ test_that("synthData_from_ecdf is reproducible with the same seed", {
   data(QMP)
   comm <- QMP[, 1:5]
   Sigma <- diag(5)
-  set.seed(42); out1 <- synthData_from_ecdf(comm, Sigma = Sigma, n = 10)
-  set.seed(42); out2 <- synthData_from_ecdf(comm, Sigma = Sigma, n = 10)
+  set.seed(42)
+  out1 <- synthData_from_ecdf(comm, Sigma = Sigma, n = 10)
+  set.seed(42)
+  out2 <- synthData_from_ecdf(comm, Sigma = Sigma, n = 10)
   expect_equal(out1, out2)
 })
 
@@ -46,8 +50,8 @@ test_that("synthData_from_ecdf preserves zero structure", {
   set.seed(1)
   out <- synthData_from_ecdf(comm, Sigma = Sigma, n = 50)
   # zero ratio in output should be in the same ballpark as input (within 20%)
-  zratio_in  <- apply(comm, 2, function(x) mean(x == 0))
-  zratio_out <- apply(out,  2, function(x) mean(x == 0))
+  zratio_in <- apply(comm, 2, function(x) mean(x == 0))
+  zratio_out <- apply(out, 2, function(x) mean(x == 0))
   expect_true(all(abs(zratio_out - zratio_in) < 0.20))
 })
 
@@ -111,7 +115,9 @@ test_that("SPRING warns when quantitative data looks normalized", {
 
 test_that("SPRING is reproducible with the same seed", {
   data(QMP)
-  set.seed(42); fit1 <- spring_small()
-  set.seed(42); fit2 <- spring_small()
+  set.seed(42)
+  fit1 <- spring_small()
+  set.seed(42)
+  fit2 <- spring_small()
   expect_equal(fit1$output$stars$opt.index, fit2$output$stars$opt.index)
 })

@@ -4,7 +4,7 @@
 \alias{synthData_from_ecdf}
 \title{Synthetic data generator from real counts}
 \usage{
-synthData_from_ecdf(comm, mar = 2, Sigma, n, seed = 10010, verbose = FALSE)
+synthData_from_ecdf(comm, mar = 2, Sigma, n, verbose = FALSE)
 }
 \arguments{
 \item{comm}{community; a matrix of real count data that we want to simulate/sythesize. Samples are in rows and OTUs are in columns.}
@@ -14,8 +14,6 @@ synthData_from_ecdf(comm, mar = 2, Sigma, n, seed = 10010, verbose = FALSE)
 \item{Sigma}{covariance structure of size p by p. p should match with the number of OTUs in \code{comm}, in other words, the number of columns of \code{comm}.}
 
 \item{n}{number of samples}
-
-\item{seed}{seed number for data generation (rmvnorm)}
 
 \item{verbose}{logical value. If it is TRUE, it will print out which iteration is going on and how long it took for calculation for each step. The defulat is FALSE.}
 }
@@ -29,9 +27,9 @@ This function generates synthetic count data based on empirical cumulative distr
 data(QMP)
 
 # Fast example: small subset (5 taxa), identity covariance
+set.seed(10010)
 Sigma_small <- diag(5)
-X_small <- synthData_from_ecdf(QMP[, 1:5], Sigma = Sigma_small, n = 20,
-                               seed = 10010)
+X_small <- synthData_from_ecdf(QMP[, 1:5], Sigma = Sigma_small, n = 20)
 
 # Full example with a prescribed graph structure -- slow on all 91 taxa
 \donttest{
@@ -40,6 +38,6 @@ p <- ncol(QMP)
 graph <- SpiecEasi::make_graph("cluster", p, 2 * p)
 Prec  <- SpiecEasi::graph2prec(graph)
 Sigma <- cov2cor(SpiecEasi::prec2cov(Prec))
-X <- synthData_from_ecdf(QMP, Sigma = Sigma, n = 100, seed = 10010)
+X <- synthData_from_ecdf(QMP, Sigma = Sigma, n = 100)
 }
 }

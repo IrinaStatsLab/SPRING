@@ -6,7 +6,6 @@
 #' @param mar MARGIN for apply function to calculate zero proportion for each row (mar = 1) or column (mar = 2).
 #' @param Sigma covariance structure of size p by p. p should match with the number of OTUs in \code{comm}, in other words, the number of columns of \code{comm}.
 #' @param n number of samples
-#' @param seed seed number for data generation (rmvnorm)
 #' @param verbose logical value. If it is TRUE, it will print out which iteration is going on and how long it took for calculation for each step. The defulat is FALSE.
 #'
 #' @return \code{synthData_from_ecdf} returns a data matrix of size n by p.
@@ -17,20 +16,17 @@
 #' @export
 #'
 #' @example man/examples/synthData_ex.R
-synthData_from_ecdf <- function(comm, mar = 2, Sigma, n, seed = 10010, verbose = FALSE){
+synthData_from_ecdf <- function(comm, mar = 2, Sigma, n, verbose = FALSE){
 
   d <- ncol(comm)
   zratio <- apply(comm, MARGIN = mar, function(x) (sum(x==0)/length(x)))
   maxabund <- apply(comm, MARGIN = mar, max) # to restrict the search range of the solution.
 
-  if(!is.null(seed)) {
-    set.seed(seed)
-  }
   normd <- mvtnorm::rmvnorm(n, mean=rep(0, d), sigma = Sigma) # mvtnorm package is the fastest one to generate multivariate normal.
   unif <- pnorm(normd)
   dat <- matrix(0, n, d)
 
-  for ( j in 1:d ){
+  for (j in seq_len(d)){
     nzind <- which(unif[, j] > zratio[j]) # to keep the zero ratio as the true data.
     empf <- ecdf(comm[, j]) # empf is a cdf function. empf(c) = Pr(X <= c)
 
@@ -59,6 +55,8 @@ synthData_from_ecdf <- function(comm, mar = 2, Sigma, n, seed = 10010, verbose =
 #' @param tol the desired accuracy (convergence tolerance).
 #' @param maxiter the maximum number of iterations for \code{uniroot.all}.
 #'
+#' @return A numeric scalar: the count value corresponding to probability \code{p}
+#'   under the empirical CDF.
 #' @importFrom rootSolve uniroot.all
 #' @examples
 #' ### This is an internal function used in synthData_from_ecdf.

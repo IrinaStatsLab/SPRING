@@ -15,7 +15,8 @@ test_that("synthData_from_ecdf returns matrix of correct dimensions", {
   data(QMP)
   comm <- QMP[, 1:5]
   Sigma <- diag(5)
-  out <- synthData_from_ecdf(comm, Sigma = Sigma, n = 20, seed = 1)
+  set.seed(1)
+  out <- synthData_from_ecdf(comm, Sigma = Sigma, n = 20)
   expect_true(is.matrix(out))
   expect_equal(dim(out), c(20L, 5L))
 })
@@ -24,7 +25,8 @@ test_that("synthData_from_ecdf returns non-negative values", {
   data(QMP)
   comm <- QMP[, 1:5]
   Sigma <- diag(5)
-  out <- synthData_from_ecdf(comm, Sigma = Sigma, n = 20, seed = 1)
+  set.seed(1)
+  out <- synthData_from_ecdf(comm, Sigma = Sigma, n = 20)
   expect_true(all(out >= 0))
 })
 
@@ -32,8 +34,8 @@ test_that("synthData_from_ecdf is reproducible with the same seed", {
   data(QMP)
   comm <- QMP[, 1:5]
   Sigma <- diag(5)
-  out1 <- synthData_from_ecdf(comm, Sigma = Sigma, n = 10, seed = 42)
-  out2 <- synthData_from_ecdf(comm, Sigma = Sigma, n = 10, seed = 42)
+  set.seed(42); out1 <- synthData_from_ecdf(comm, Sigma = Sigma, n = 10)
+  set.seed(42); out2 <- synthData_from_ecdf(comm, Sigma = Sigma, n = 10)
   expect_equal(out1, out2)
 })
 
@@ -41,7 +43,8 @@ test_that("synthData_from_ecdf preserves zero structure", {
   data(QMP)
   comm <- QMP[, 1:5]
   Sigma <- diag(5)
-  out <- synthData_from_ecdf(comm, Sigma = Sigma, n = 50, seed = 1)
+  set.seed(1)
+  out <- synthData_from_ecdf(comm, Sigma = Sigma, n = 50)
   # zero ratio in output should be in the same ballpark as input (within 20%)
   zratio_in  <- apply(comm, 2, function(x) mean(x == 0))
   zratio_out <- apply(out,  2, function(x) mean(x == 0))
@@ -108,7 +111,7 @@ test_that("SPRING warns when quantitative data looks normalized", {
 
 test_that("SPRING is reproducible with the same seed", {
   data(QMP)
-  fit1 <- spring_small(seed = 42)
-  fit2 <- spring_small(seed = 42)
+  set.seed(42); fit1 <- spring_small()
+  set.seed(42); fit2 <- spring_small()
   expect_equal(fit1$output$stars$opt.index, fit2$output$stars$opt.index)
 })

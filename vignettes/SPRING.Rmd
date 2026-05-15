@@ -35,7 +35,7 @@ The main steps are:
 1. [For compositional data] Normalize data using the 
    *mclr* transformation.
 2. Estimate a rank-based latent correlation matrix via a truncated Gaussian copula model. This is based on R package `latentcor` ([Huang et al. (2021)](https://doi.org/10.21105/joss.03634)).
-3. Fit a sparse graphical model using Meinshausen-Buehlmann (MB) neighborhood
+3. Fit a sparse graphical model using Meinshausen-Bühlmann (MB) neighborhood
    selection across a regularization path.
 4. Select the optimal sparsity level via StARS (Stability Approach to
    Regularization Selection) subsampling.
@@ -114,7 +114,7 @@ cat("Number of edges:", sum(adj) / 2, "\n")
 
 # Visualizing the network
 
-The estimated Meinshausen-Buehlmann (MB) coefficients at the optimal lambda
+The estimated Meinshausen-Bühlmann (MB) coefficients at the optimal lambda
 capture both the presence and direction of associations. We symmetrize them
 (averaging $\hat{\beta}_{ij}$ and $\hat{\beta}_{ji}$) and focus on the
 sub-network of taxa that have at least one strong association $\geq |0.2|$,

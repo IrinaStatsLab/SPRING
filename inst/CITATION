@@ -4,7 +4,7 @@ citEntry(
   author   = personList(
     person("Grace", "Yoon"),
     person("Irina", "Gaynanova"),
-    person("Christian", "Mueller")
+    person("Christian", "Müller")
   ),
   journal  = "Frontiers in Genetics",
   year     = "2019",
@@ -12,7 +12,7 @@ citEntry(
   pages    = "516",
   doi      = "10.3389/fgene.2019.00516",
   textVersion = paste(
-    "Yoon G., Gaynanova I. and Mueller C. (2019)",
+    "Yoon G., Gaynanova I. and Müller C. (2019)",
     "Microbial Networks in SPRING - Semi-parametric Rank-Based Correlation",
     "and Partial Correlation Estimation for Quantitative Microbiome Data.",
     "Frontiers in Genetics, 10:516.",

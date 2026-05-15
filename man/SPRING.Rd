@@ -29,7 +29,7 @@ SPRING(
 
 \item{quantitative}{default is FALSE, which means input "data" is compositional data, which will be normalized using mclr transformation within a function. If TRUE, it means "quantitative" counts are input and no normalization will be applied.}
 
-\item{method}{graph estimation method. Currently only \code{"mb"} (Meinshausen-Buehlmann neighborhood selection) is available.}
+\item{method}{graph estimation method. Currently only \code{"mb"} (Meinshausen-Bühlmann neighborhood selection) is available.}
 
 \item{lambda.min.ratio}{ratio of the smallest to largest value in the lambda sequence. Default is 0.01.}
 
@@ -107,5 +107,5 @@ fit_full <- SPRING(QMP, quantitative = TRUE, lambdaseq = "data-specific",
 \references{
 Meinshausen N. and Buhlmann P. (2006) \href{https://projecteuclid.org/download/pdfview_1/euclid.aos/1152540754}{"High-dimensional graphs and variable selection with the lasso"}, \emph{The Annals of Statistics}, Vol 34, No. 3, 1436 - 1462.
 
-Yoon G., Gaynanova I. and Mueller C. (2019) \href{https://www.frontiersin.org/articles/10.3389/fgene.2019.00516/full}{"Microbial Networks in SPRING - Semi-parametric Rank-Based Correlation and Partial Correlation Estimation for Quantitative Microbiome Data"}, \emph{Frontiers in Genetics}, 10:516.
+Yoon G., Gaynanova I. and Müller C. (2019) \href{https://www.frontiersin.org/articles/10.3389/fgene.2019.00516/full}{"Microbial Networks in SPRING - Semi-parametric Rank-Based Correlation and Partial Correlation Estimation for Quantitative Microbiome Data"}, \emph{Frontiers in Genetics}, 10:516.
 }

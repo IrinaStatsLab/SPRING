@@ -4,7 +4,7 @@
 #'
 #' @param data n by p matrix of microbiome count data, either quantitative or compositional counts. Each row represents each subject/sample and each column represents each OTU (operational taxonomic unit).
 #' @param quantitative default is FALSE, which means input "data" is compositional data, which will be normalized using mclr transformation within a function. If TRUE, it means "quantitative" counts are input and no normalization will be applied.
-#' @param method graph estimation method. Currently only \code{"mb"} (Meinshausen-Buehlmann neighborhood selection) is available.
+#' @param method graph estimation method. Currently only \code{"mb"} (Meinshausen-Bühlmann neighborhood selection) is available.
 #' @param lambda.min.ratio ratio of the smallest to largest value in the lambda sequence. Default is 0.01.
 #' @param nlambda number of lambda values in the regularization sequence. Default is 20.
 #' @param lambdaseq a sequence of decreasing positive numbers to control the regularization. The default sequence has 20 values generated to be equally spaced on a logarithmic scale from 0.6 to 0.006. Users can specify a sequence to override the default sequence. If user specify as "data-specific", then the lambda sequence will be generated using estimated rank-based correlation matrix from data.
@@ -49,7 +49,7 @@
 #'
 #' Meinshausen N. and Buhlmann P. (2006) \href{https://projecteuclid.org/download/pdfview_1/euclid.aos/1152540754}{"High-dimensional graphs and variable selection with the lasso"}, \emph{The Annals of Statistics}, Vol 34, No. 3, 1436 - 1462.
 #'
-#' Yoon G., Gaynanova I. and Mueller C. (2019) \href{https://www.frontiersin.org/articles/10.3389/fgene.2019.00516/full}{"Microbial Networks in SPRING - Semi-parametric Rank-Based Correlation and Partial Correlation Estimation for Quantitative Microbiome Data"}, \emph{Frontiers in Genetics}, 10:516.
+#' Yoon G., Gaynanova I. and Müller C. (2019) \href{https://www.frontiersin.org/articles/10.3389/fgene.2019.00516/full}{"Microbial Networks in SPRING - Semi-parametric Rank-Based Correlation and Partial Correlation Estimation for Quantitative Microbiome Data"}, \emph{Frontiers in Genetics}, 10:516.
 #'
 #' @example man/examples/ex.R
 #'

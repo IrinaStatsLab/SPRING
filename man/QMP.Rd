@@ -8,7 +8,7 @@
 An object of class \code{matrix} (inherits from \code{array}) with 106 rows and 91 columns.
 }
 \source{
-Yoon, Gaynanova and Mueller (2019) Microbial Networks in SPRING -
+Yoon, Gaynanova and Müller (2019) Microbial Networks in SPRING -
 Semi-parametric Rank-Based Correlation and Partial Correlation Estimation for
 Quantitative Microbiome Data. \emph{Frontiers in Genetics}. 10:516.
 \url{doi:10.3389/fgene.2019.00516}

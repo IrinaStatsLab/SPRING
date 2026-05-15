@@ -12,14 +12,14 @@ Authors@R: c(
            role = c("aut", "cre"),
            email = "irinagn@umich.edu"),
     person(given = "Christian",
-           family = "Mueller",
+           family = "Müller",
            role = c("aut"),
            email = "christian.mueller@helmholtz-munich.de"))
 Description: Provides methods for sparse microbial association network estimation
     from microbiome count data. The core function implements SPRING (Semi-Parametric
     Rank-based approach for INference in Graphical models), which estimates latent
     correlations via a truncated Gaussian copula model and fits sparse graphical
-    models using Meinshausen-Buehlmann neighborhood selection with StARS stability
+    models using Meinshausen-Bühlmann neighborhood selection with StARS stability
     selection. Both quantitative microbiome data and compositional (relative
     abundance) data are supported; the latter via a modified central log-ratio
     (mclr) transformation that accounts for zero-inflated counts. The package also

@@ -8,14 +8,26 @@
 An object of class \code{matrix} (inherits from \code{array}) with 106 rows and 91 columns.
 }
 \source{
-Yoon, Gaynanova and Müller (2019) Microbial Networks in SPRING - Semi-parametric Rank-Based Correlation and Partial Correlation Estimation for Quantitative Microbiome Data. \emph{Frontiers in Genetics}. 10:516. \url{doi:10.3389/fgene.2019.00516}
+Yoon, Gaynanova and Mueller (2019) Microbial Networks in SPRING -
+Semi-parametric Rank-Based Correlation and Partial Correlation Estimation for
+Quantitative Microbiome Data. \emph{Frontiers in Genetics}. 10:516.
+\url{doi:10.3389/fgene.2019.00516}
 
-Vanderputte et al. (2017) Quantitative microbiome profiling links gut community variation to microbial load. \emph{Nature}. 551: 507-511. \url{doi:10.1038/nature24460}
+Vandeputte et al. (2017) Quantitative microbiome profiling links gut
+community variation to microbial load. \emph{Nature}. 551: 507-511.
+\url{doi:10.1038/nature24460}
 }
 \usage{
 QMP
 }
 \description{
-The data containing quantitative microbiome count data of dimenstion 106 samples/subjects (in rows) and 91 OTUs (in columns). The raw dataset is pruned the taxa present less than 30\% of samples and final dataset contains only healthy subjects from two cohorts: Study cohort and Disease cohort.
+Quantitative microbiome count data from Vandeputte et al. (2017)
+  with 106 healthy subjects (rows) and 91 taxa (columns). Taxa present in
+  fewer than 30\% of samples are excluded, and only healthy subjects from the
+  Study cohort and Disease cohort are retained. Column names are taxonomy
+  labels: genus name where classified, otherwise the most specific named rank
+  (family, order, class, or phylum), with numeric suffixes disambiguating
+  multiple unclassified taxa within the same rank (e.g.,
+  \code{Ruminococcaceae} and \code{Ruminococcaceae_1}).
 }
 \keyword{datasets}

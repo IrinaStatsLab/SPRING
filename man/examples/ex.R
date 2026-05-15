@@ -1,6 +1,3 @@
-rm(list = ls())
-library(SPRING)
-
 # Load the synthetic count data
 data("QMP") # n = 1000 and p = 100 synthetic dataset
 

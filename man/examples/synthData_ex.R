@@ -1,7 +1,3 @@
-
-
-require(SpiecEasi)
-
 # goal is to generate synthetic data with a prescribed graph structure.
 # load real data "QMP" in SPRING package.
 data(QMP)

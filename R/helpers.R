@@ -85,7 +85,7 @@ mclr <- function(dat, base = exp(1), tol = 1e-16, eps = NULL, atleast = 1){
   if (is.null(eps)){
     if(atleast < 0){
       warning("atleast should be positive. The functions uses default value 1 instead.")
-      atleast = 1
+      atleast <- 1
     }
     if( min(clrdat) < 0 ){ # to find the smallest negative value and add 1 to shift all data larger than zero.
       positivecst <- abs(min(clrdat)) + atleast # "atleast" has default 1.

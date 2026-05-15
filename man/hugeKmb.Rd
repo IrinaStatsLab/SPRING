@@ -53,3 +53,9 @@ hugeKmb(
 \description{
 Internal wrapper function to implement rank-based correlation to huge.mb function in "huge" package
 }
+\examples{
+data(QMP)
+lambda <- c(0.5, 0.3, 0.1)
+out <- hugeKmb(QMP[, 1:10], lambda = lambda, verbose = FALSE)
+
+}

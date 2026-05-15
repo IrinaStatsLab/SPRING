@@ -36,6 +36,11 @@
 #' @importFrom huge huge.mb
 #' @export
 #'
+#' @examples
+#' data(QMP)
+#' lambda <- c(0.5, 0.3, 0.1)
+#' out <- hugeKmb(QMP[, 1:10], lambda = lambda, verbose = FALSE)
+#'
 hugeKmb <- function(data, lambda, type = "tru", sym = "or", verbose = TRUE, Rmethod = c("approx", "original"), tol = 1e-6, use.nearPD = TRUE, nu = 0.001, ratio = 0.9) {
   Rmethod <- match.arg(Rmethod)
   S    <- latentcor::latentcor(data, types = type, method = Rmethod, tol = tol, use.nearPD = use.nearPD, nu = nu, ratio = ratio, showplot = FALSE)$R

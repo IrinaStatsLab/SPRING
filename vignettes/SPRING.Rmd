@@ -122,17 +122,15 @@ following the criterion used in the original paper.
 ```{r visualization, fig.width=7, fig.height=7}
 library(corrplot)
 
-# Run SPRING on annotated data (genus names as column labels)
-# Using paper settings (nlambda = 50, rep.num = 50) to reproduce reported associations
-data(QMP_annotated)
+# Run SPRING with paper settings (nlambda = 50, rep.num = 50)
 set.seed(10010)
-fit_ann <- SPRING(QMP_annotated, quantitative = TRUE, nlambda = 50, rep.num = 50,
+fit_ann <- SPRING(QMP, quantitative = TRUE, nlambda = 50, rep.num = 50,
                   seed = 10010, verbose = FALSE)
 opt_ann <- fit_ann$output$stars$opt.index
 
 # Symmetrize MB coefficients at optimal lambda
 beta_opt <- as.matrix(fit_ann$fit$est$beta[[opt_ann]])
-rownames(beta_opt) <- colnames(beta_opt) <- colnames(QMP_annotated)
+rownames(beta_opt) <- colnames(beta_opt) <- colnames(QMP)
 beta_sym <- (beta_opt + t(beta_opt)) / 2
 
 # Subset to taxa with at least one strong association >= |0.2|

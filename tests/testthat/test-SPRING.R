@@ -93,6 +93,23 @@ test_that("SPRING works with compositional data (quantitative = FALSE)", {
   ))
 })
 
+test_that("SPRING accepts phyloseq and otu_table input", {
+  skip_if_not_installed("phyloseq")
+  data(QMP)
+  otu <- phyloseq::otu_table(t(QMP[, 1:10]), taxa_are_rows = TRUE)
+  fit_otu <- suppressWarnings(
+    SPRING(otu, quantitative = TRUE, nlambda = 5, rep.num = 5, verbose = FALSE)
+  )
+  fit_phy <- suppressWarnings(
+    SPRING(phyloseq::phyloseq(otu), quantitative = TRUE,
+           nlambda = 5, rep.num = 5, verbose = FALSE)
+  )
+  expect_type(fit_otu, "list")
+  expect_type(fit_phy, "list")
+  expect_equal(length(fit_otu$lambdaseq), 5)
+  expect_equal(length(fit_phy$lambdaseq), 5)
+})
+
 test_that("SPRING works with data-specific lambda sequence", {
   data(QMP)
   fit <- spring_small(lambdaseq = "data-specific")

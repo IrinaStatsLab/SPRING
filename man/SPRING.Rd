@@ -2,6 +2,9 @@
 % Please edit documentation in R/SPRING.R
 \name{SPRING}
 \alias{SPRING}
+\alias{SPRING.default}
+\alias{SPRING.phyloseq}
+\alias{SPRING.otu_table}
 \title{Semi-Parametric Rank-based approach for INference in Graphical model (SPRING)}
 \usage{
 SPRING(
@@ -21,11 +24,37 @@ SPRING(
   Rmethod = "approx",
   use.nearPD = TRUE,
   nu = 0.001,
-  ratio = 0.9
+  ratio = 0.9,
+  ...
+)
+
+\method{SPRING}{phyloseq}(data, ...)
+
+\method{SPRING}{otu_table}(data, ...)
+
+\method{SPRING}{default}(
+  data,
+  quantitative = FALSE,
+  method = c("mb"),
+  lambda.min.ratio = 0.01,
+  nlambda = 20,
+  lambdaseq = exp(seq(log(0.6), log(0.6 * lambda.min.ratio), length.out = nlambda)),
+  seed = 10010,
+  ncores = 1,
+  thresh = 0.1,
+  subsample.ratio = 0.8,
+  rep.num = 20,
+  Rtol = 1e-06,
+  verbose = TRUE,
+  Rmethod = "approx",
+  use.nearPD = TRUE,
+  nu = 0.001,
+  ratio = 0.9,
+  ...
 )
 }
 \arguments{
-\item{data}{n by p matrix of microbiome count data, either quantitative or compositional counts. Each row represents each subject/sample and each column represents each OTU (operational taxonomic unit).}
+\item{data}{n by p matrix of microbiome count data, either quantitative or compositional counts. Each row represents each subject/sample and each column represents each OTU (operational taxonomic unit). Can also be a \code{phyloseq} or \code{otu_table} object.}
 
 \item{quantitative}{default is FALSE, which means input "data" is compositional data, which will be normalized using mclr transformation within a function. If TRUE, it means "quantitative" counts are input and no normalization will be applied.}
 
@@ -58,6 +87,8 @@ SPRING(
 \item{nu}{Shrinkage parameter for the correlation matrix, must be between 0 and 1. Guarantees that the minimal eigenvalue of the returned correlation matrix is greater or equal to \code{nu}. The default (recommended) value is 0.001.}
 
 \item{ratio}{When \code{Rmethod = "approx"}, specifies the boundary value for multilinear interpolation, must be between 0 and 1. The default (recommended) value is 0.9. Ignored when \code{Rmethod = "original"}.}
+
+\item{...}{further arguments passed to the default \code{SPRING} method after extracting the OTU table from a \code{phyloseq} object.}
 }
 \value{
 \code{SPRING} returns a list containing

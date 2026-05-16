@@ -2,7 +2,7 @@
 #'
 #' @description SPRING follows the neighborhood selection methodology outlined in "mb" method (Meinshausen and Buhlmann (2006)).
 #'
-#' @param data n by p matrix of microbiome count data, either quantitative or compositional counts. Each row represents each subject/sample and each column represents each OTU (operational taxonomic unit).
+#' @param data n by p matrix of microbiome count data, either quantitative or compositional counts. Each row represents each subject/sample and each column represents each OTU (operational taxonomic unit). Can also be a \code{phyloseq} or \code{otu_table} object.
 #' @param quantitative default is FALSE, which means input "data" is compositional data, which will be normalized using mclr transformation within a function. If TRUE, it means "quantitative" counts are input and no normalization will be applied.
 #' @param method graph estimation method. Currently only \code{"mb"} (Meinshausen-Bühlmann neighborhood selection) is available.
 #' @param lambda.min.ratio ratio of the smallest to largest value in the lambda sequence. Default is 0.01.
@@ -19,6 +19,7 @@
 #' @param use.nearPD Logical indicator. \code{use.nearPD = TRUE} gets nearest positive definite matrix for the estimated latent correlation matrix with shrinkage adjustment by \code{nu}. Output \code{R} is the same as \code{Rpointwise} if \code{use.nearPD = FALSE}. Default value is \code{TRUE}.
 #' @param nu Shrinkage parameter for the correlation matrix, must be between 0 and 1. Guarantees that the minimal eigenvalue of the returned correlation matrix is greater or equal to \code{nu}. The default (recommended) value is 0.001.
 #' @param ratio When \code{Rmethod = "approx"}, specifies the boundary value for multilinear interpolation, must be between 0 and 1. The default (recommended) value is 0.9. Ignored when \code{Rmethod = "original"}.
+#' @param ... further arguments passed to the default \code{SPRING} method after extracting the OTU table from a \code{phyloseq} object.
 #'
 #' @return \code{SPRING} returns a list containing
 #' \describe{
@@ -53,7 +54,58 @@
 #'
 #' @example man/examples/ex.R
 #'
-SPRING <- function(data, quantitative = FALSE, method = c("mb"), lambda.min.ratio = 1e-2, nlambda = 20, lambdaseq = exp(seq(log(0.6), log(0.6 * lambda.min.ratio), length.out = nlambda)), seed = 10010, ncores = 1, thresh = 0.1, subsample.ratio = 0.8, rep.num = 20, Rtol = 1e-6, verbose = TRUE, Rmethod = "approx", use.nearPD = TRUE, nu = 0.001, ratio = 0.9) {
+SPRING <- function(data, quantitative = FALSE, method = c("mb"), lambda.min.ratio = 1e-2, nlambda = 20, lambdaseq = exp(seq(log(0.6), log(0.6 * lambda.min.ratio), length.out = nlambda)), seed = 10010, ncores = 1, thresh = 0.1, subsample.ratio = 0.8, rep.num = 20, Rtol = 1e-6, verbose = TRUE, Rmethod = "approx", use.nearPD = TRUE, nu = 0.001, ratio = 0.9, ...) {
+  UseMethod("SPRING", data)
+}
+
+.phy2mat <- function(OTU) {
+  if (inherits(OTU, "phyloseq")) {
+    OTU <- OTU@otu_table
+  }
+  if (inherits(OTU, "otu_table")) {
+    if (OTU@taxa_are_rows) {
+      OTU <- t(OTU@.Data)
+    } else {
+      OTU <- OTU@.Data
+    }
+  }
+  return(OTU)
+}
+
+#' @method SPRING phyloseq
+#' @rdname SPRING
+#' @export
+SPRING.phyloseq <- function(data, ...) {
+  if (!requireNamespace("phyloseq", quietly = TRUE)) {
+    stop("'Phyloseq' package is not installed. See doi.org/doi:10.18129/B9.bioc.phyloseq")
+  }
+  SPRING(.phy2mat(data), ...)
+}
+
+#' @method SPRING otu_table
+#' @rdname SPRING
+#' @export
+SPRING.otu_table <- function(data, ...) {
+  if (!requireNamespace("phyloseq", quietly = TRUE)) {
+    stop("'Phyloseq' package is not installed. See doi.org/doi:10.18129/B9.bioc.phyloseq")
+  }
+  SPRING(.phy2mat(data), ...)
+}
+
+#' @method SPRING default
+#' @rdname SPRING
+#' @export
+SPRING.default <- function(data, quantitative = FALSE, method = c("mb"), lambda.min.ratio = 1e-2, nlambda = 20, lambdaseq = exp(seq(log(0.6), log(0.6 * lambda.min.ratio), length.out = nlambda)), seed = 10010, ncores = 1, thresh = 0.1, subsample.ratio = 0.8, rep.num = 20, Rtol = 1e-6, verbose = TRUE, Rmethod = "approx", use.nearPD = TRUE, nu = 0.001, ratio = 0.9, ...) {
+  dots <- list(...)
+  if (length(dots) > 0) {
+    unused <- names(dots)
+    if (is.null(unused)) {
+      unused <- rep("<unnamed>", length(dots))
+    } else {
+      unused[unused == ""] <- "<unnamed>"
+    }
+    stop("unused arguments: ", paste(unused, collapse = ", "))
+  }
   method <- match.arg(method)
 
   if (any(data < 0)) {

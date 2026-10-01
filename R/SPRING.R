@@ -23,30 +23,36 @@
 #'
 #' @return \code{SPRING} returns a list containing
 #' \describe{
-#'       \item{output}{Output results of \code{pulsar::pulsar} based on StARS criterion. It contains:
+#'       \item{output}{Output of StARS (Stability Approach to Regularization Selection; Liu, Roeder and Wasserman (2010)). It contains:
 #'               \describe{
-#'                        \item{merge}{a list of length \code{nlambda} and each element of list contains a matrix of edge selection probability. Each lambda value, this edge selection probability is calculated across \code{rep.num}.}
-#'                        \item{summary}{the summary statistic over \code{rep.num} graphs at each value of lambda.}
-#'                        \item{opt.index}{index (along the path) of optimal lambda selected by the criterion at the desired threshold. Will return \eqn{0} if no optimum is found or \code{NULL} if selection for the criterion is not implemented.}
-#'                        \item{criterion}{we use StARS for our stability criterion.}
+#'                        \item{stars}{a list containing:
+#'                               \describe{
+#'                                        \item{merge}{a list of length \code{nlambda}; each element is a p by p matrix of edge selection probabilities across the \code{rep.num} subsamples at that lambda value.}
+#'                                        \item{summary}{the (monotonized) total edge instability over the \code{rep.num} subsamples at each value of lambda.}
+#'                                        \item{opt.index}{index (along the path) of the optimal lambda selected by StARS at the desired threshold.}
+#'                                        \item{criterion}{the stability criterion, \code{"stars.stability"}.}
+#'                                        \item{thresh}{the StARS threshold used.}
+#'                               }}
+#'                        \item{est}{the "mb" fit on the whole data (same as \code{fit$est}).}
 #'               }}
-#'       \item{fit}{Output results of \code{pulsar::refit} function. It contains:
+#'       \item{fit}{Refit on the whole data. It contains:
 #'               \describe{
 #'                        \item{est}{a list containing:
 #'                               \describe{
 #'                                        \item{beta}{Estimates of beta coefficient matrices (of size p by p) by "mb" method on the whole data at each lambda sequence value.}
 #'                                        \item{path}{Estimates of adjacency matrix (of size p by p) on the whole data at each lambda sequence value.}
 #'                               }}
-#'                        \item{refit}{final estimates of adjacency matrix (of size p by p).}
+#'                        \item{refit}{a list with element \code{stars}: the final estimate of the adjacency matrix (of size p by p) at the StARS-selected lambda.}
 #'               }}
 #'       \item{lambdaseq}{lambda sequence used in the analysis.}
 #' }
-#' @importFrom pulsar pulsar
 #' @importFrom latentcor latentcor
 #'
 #' @export
 #'
 #' @references
+#'
+#' Liu H., Roeder K. and Wasserman L. (2010) "Stability Approach to Regularization Selection (StARS) for High Dimensional Graphical Models", \emph{Advances in Neural Information Processing Systems} 23.
 #'
 #' Meinshausen N. and Buhlmann P. (2006) \href{https://projecteuclid.org/download/pdfview_1/euclid.aos/1152540754}{"High-dimensional graphs and variable selection with the lasso"}, \emph{The Annals of Statistics}, Vol 34, No. 3, 1436 - 1462.
 #'
@@ -124,7 +130,7 @@ SPRING.default <- function(data, quantitative = FALSE, method = c("mb"), lambda.
 
   if (is.character(lambdaseq)) {
     if (lambdaseq == "data-specific") {
-      Kcor <- latentcor::latentcor(qdat, types = "tru", method = Rmethod, tol = Rtol, use.nearPD = use.nearPD, nu = nu, ratio = ratio)$R
+      Kcor <- latentcor::latentcor(qdat, types = "tru", method = Rmethod, tol = Rtol, use.nearPD = use.nearPD, nu = nu, ratio = ratio, showplot = FALSE)$R
       # generate lambda sequence
       lambda.max <- max(max(Kcor - diag(p)), -min(Kcor - diag(p)))
       lambda.min <- lambda.min.ratio * lambda.max
@@ -133,14 +139,17 @@ SPRING.default <- function(data, quantitative = FALSE, method = c("mb"), lambda.
       stop("The input for lambdaseq is not correct.\n")
     }
   }
+  if (!is.numeric(lambdaseq) || any(lambdaseq <= 0) || is.unsorted(rev(lambdaseq))) {
+    stop("lambdaseq must be a decreasing sequence of positive numbers or \"data-specific\".\n")
+  }
 
   if (method == "mb") {
     fun <- hugeKmb
   }
 
-  out1.K_count <- pulsar::pulsar(qdat, fun = fun, fargs = list(lambda = lambdaseq, Rmethod = Rmethod, tol = Rtol, verbose = verbose, use.nearPD = use.nearPD, nu = nu, ratio = ratio), rep.num = rep.num, criterion = "stars", seed = seed, ncores = ncores, thresh = thresh, subsample.ratio = subsample.ratio)
+  out1.K_count <- .stars(qdat, fun = fun, fargs = list(lambda = lambdaseq, Rmethod = Rmethod, tol = Rtol, verbose = verbose, use.nearPD = use.nearPD, nu = nu, ratio = ratio), rep.num = rep.num, seed = seed, ncores = ncores, thresh = thresh, subsample.ratio = subsample.ratio)
 
-  fit1.K_count <- pulsar::refit(out1.K_count)
+  fit1.K_count <- .stars_refit(out1.K_count)
 
   return(list(output = out1.K_count, fit = fit1.K_count, lambdaseq = lambdaseq))
 }

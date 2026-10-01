@@ -37,7 +37,7 @@ BugReports: https://github.com/IrinaStatsLab/SPRING/issues
 License: GPL-3
 Encoding: UTF-8
 Depends: R (>= 4.6.0)
-Imports: latentcor, SpiecEasi, huge, pulsar, rootSolve, mvtnorm, stats
+Imports: latentcor, huge, parallel, rootSolve, mvtnorm, stats
 biocViews: GraphAndNetwork, Microbiome, NetworkInference, Network,
     Normalization, Sequencing
 Suggests:
@@ -48,4 +48,4 @@ Suggests:
     corrplot,
     phyloseq
 VignetteBuilder: knitr
-Config/roxygen2/version: 8.0.0
+Config/roxygen2/version: 8.1.0

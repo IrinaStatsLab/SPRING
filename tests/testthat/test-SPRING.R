@@ -1,5 +1,5 @@
 # Helper: run SPRING on a small subset with minimal iterations.
-# suppressWarnings silences pulsar's "Optimal lambda may be larger than
+# suppressWarnings silences StARS's "Optimal lambda may be larger than
 # supplied values" which occurs with small p and few lambdas in tests.
 spring_small <- function(...) {
   suppressWarnings(
@@ -136,5 +136,41 @@ test_that("SPRING is reproducible with the same seed", {
   fit1 <- spring_small()
   set.seed(42)
   fit2 <- spring_small()
+  expect_equal(fit1$output$stars$opt.index, fit2$output$stars$opt.index)
+})
+
+test_that("SPRING stops on a non-decreasing lambda sequence", {
+  data(QMP)
+  expect_error(
+    SPRING(QMP[, 1:10], quantitative = TRUE, lambdaseq = c(0.1, 0.3, 0.5), rep.num = 3, verbose = FALSE),
+    regexp = "decreasing"
+  )
+})
+
+test_that("SPRING does not change the caller's RNG state", {
+  data(QMP)
+  set.seed(1)
+  before <- .Random.seed
+  fit <- spring_small()
+  expect_identical(.Random.seed, before)
+})
+
+test_that("SPRING StARS output is internally consistent", {
+  data(QMP)
+  fit <- spring_small()
+  stars <- fit$output$stars
+  expect_length(stars$merge, 5)
+  expect_length(stars$summary, 5)
+  expect_false(is.unsorted(stars$summary))
+  expect_true(all(vapply(stars$merge, function(m) all(m >= 0 & m <= 1), logical(1))))
+  expect_identical(fit$fit$refit$stars, fit$fit$est$path[[stars$opt.index]])
+})
+
+test_that("SPRING gives the same result with ncores > 1", {
+  skip_on_cran()
+  data(QMP)
+  fit1 <- spring_small()
+  fit2 <- spring_small(ncores = 2)
+  expect_equal(fit1$output$stars$merge, fit2$output$stars$merge)
   expect_equal(fit1$output$stars$opt.index, fit2$output$stars$opt.index)
 })

@@ -94,13 +94,13 @@ test_that("hugeKmb beta elements are p x p matrices", {
   }
 })
 
-test_that("hugeKmb sparsity increases with lambda", {
+test_that("hugeKmb selects fewer edges at larger lambda", {
   data(QMP)
   dat <- QMP[1:20, 1:5]
-  lambda <- c(0.1, 0.4)
+  lambda <- c(0.4, 0.1)
   out <- hugeKmb(dat, lambda = lambda, verbose = FALSE)
-  # higher lambda -> sparser graph
-  expect_true(out$sparsity[1] >= out$sparsity[2])
+  # huge's "sparsity" is the edge density: larger lambda -> lower value
+  expect_true(out$sparsity[1] <= out$sparsity[2])
 })
 
 test_that("hugeKmb works with Rmethod = 'original'", {

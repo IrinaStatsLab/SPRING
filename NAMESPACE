@@ -7,13 +7,11 @@ export(SPRING)
 export(hugeKmb)
 export(mclr)
 export(synthData_from_ecdf)
-importFrom(SpiecEasi,graph2prec)
-importFrom(SpiecEasi,make_graph)
-importFrom(SpiecEasi,prec2cov)
 importFrom(huge,huge.mb)
 importFrom(latentcor,latentcor)
 importFrom(mvtnorm,rmvnorm)
-importFrom(pulsar,pulsar)
 importFrom(rootSolve,uniroot.all)
-importFrom(stats,ecdf)
-importFrom(stats,pnorm)
+importFrom(stats,
+  ecdf,
+  pnorm
+)

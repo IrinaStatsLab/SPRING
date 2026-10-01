@@ -12,7 +12,6 @@
 #' @importFrom mvtnorm rmvnorm
 #' @importFrom stats ecdf
 #' @importFrom stats pnorm
-#' @importFrom SpiecEasi make_graph graph2prec prec2cov
 #' @export
 #'
 #' @example man/examples/synthData_ex.R

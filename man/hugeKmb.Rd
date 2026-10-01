@@ -18,7 +18,7 @@ hugeKmb(
 )
 }
 \arguments{
-\item{data}{n by p matrix data. usually through pulsar, data will receive subsamples.}
+\item{data}{n by p matrix data. during StARS subsampling, this receives subsamples of the data.}
 
 \item{lambda}{a vector of lambda values}
 

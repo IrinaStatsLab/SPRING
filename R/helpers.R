@@ -11,7 +11,7 @@
 
 #' Internal wrapper function to implement rank-based correlation to huge.mb function in "huge" package
 #'
-#' @param data n by p matrix data. usually through pulsar, data will receive subsamples.
+#' @param data n by p matrix data. during StARS subsampling, this receives subsamples of the data.
 #' @param lambda a vector of lambda values
 #' @param type a type of variables passed to \code{latentcor}. "tru" (truncated) is default. See \code{latentcor::latentcor} for valid values ("con", "bin", "tru", "ter").
 #' @param sym "or" is the symmetrizing rule of the output graphs. If sym = "and", the edge between node i and node j is selected ONLY when both node i and node j are selected as neighbors for each other. If sym = "or", the edge is selected when either node i or node j is selected as the neighbor for each other. The default value is "or". (refer to huge manual)
